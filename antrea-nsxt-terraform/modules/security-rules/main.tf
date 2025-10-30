@@ -34,19 +34,15 @@ resource "nsxt_policy_security_policy_rule" "rules" {
     group == "ANY" ? "ANY" : "/infra/domains/${var.domain}/groups/${group}"
   ]
 
-  # Services - either use predefined services or create custom port entries
-  dynamic "services" {
-    for_each = length(each.value.services) > 0 && each.value.services[0] == "ANY" ? ["ANY"] : []
-    content {
-      path = "ANY"
-    }
-  }
+  # Services - use ANY for simple rules
+  services = length(each.value.services) > 0 && each.value.services[0] == "ANY" ? ["ANY"] : []
 
-  # Custom port-based service entries
-  dynamic "service_entry" {
+  # For custom port-based rules, use l4_port_set_entry
+  dynamic "l4_port_set_entry" {
     for_each = length(each.value.destination_ports) > 0 ? [1] : []
     content {
-      protocol         = each.value.protocol
+      display_name      = "${each.value.display_name}-service"
+      protocol          = each.value.protocol
       destination_ports = each.value.destination_ports
     }
   }
