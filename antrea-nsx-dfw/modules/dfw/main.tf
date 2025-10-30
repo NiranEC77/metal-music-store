@@ -61,6 +61,10 @@ resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
   group_type   = "ANTREA"
   
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
+  
   criteria {
     condition {
       member_type = "Pod"
@@ -99,6 +103,10 @@ resource "nsxt_policy_group" "store_service" {
 resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
   group_type   = "ANTREA"
+  
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
   
   criteria {
     condition {
@@ -139,6 +147,10 @@ resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
   group_type   = "ANTREA"
   
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
+  
   criteria {
     condition {
       member_type = "Pod"
@@ -177,6 +189,10 @@ resource "nsxt_policy_group" "order_service" {
 resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
   group_type   = "ANTREA"
+  
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
   
   criteria {
     condition {
@@ -217,6 +233,10 @@ resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
   group_type   = "ANTREA"
   
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
+  
   criteria {
     condition {
       member_type = "Pod"
@@ -255,6 +275,10 @@ resource "nsxt_policy_group" "database_service" {
 resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
   group_type   = "ANTREA"
+  
+  context {
+    project_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+  }
   
   criteria {
     condition {
