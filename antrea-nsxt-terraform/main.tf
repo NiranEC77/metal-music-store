@@ -109,7 +109,7 @@ resource "nsxt_policy_group" "music_store_frontend" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -147,7 +147,7 @@ resource "nsxt_policy_group" "store_service" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -185,7 +185,7 @@ resource "nsxt_policy_group" "cart_service" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -223,7 +223,7 @@ resource "nsxt_policy_group" "order_service" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -261,7 +261,7 @@ resource "nsxt_policy_group" "users_service" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -299,7 +299,7 @@ resource "nsxt_policy_group" "database_service" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
@@ -337,7 +337,7 @@ resource "nsxt_policy_group" "music_store_all" {
 
   criteria {
     condition {
-      member_type = "Segment"
+      member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
       value       = "music-store"
