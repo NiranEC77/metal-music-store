@@ -109,10 +109,28 @@ resource "nsxt_policy_group" "music_store_frontend" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app|music-store-1"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:app|music-store-1"
     }
   }
 
@@ -129,10 +147,28 @@ resource "nsxt_policy_group" "store_service" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|store"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:service-name|store"
     }
   }
 
@@ -149,10 +185,28 @@ resource "nsxt_policy_group" "cart_service" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|cart"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:service-name|cart"
     }
   }
 
@@ -169,10 +223,28 @@ resource "nsxt_policy_group" "order_service" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|order"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:service-name|order"
     }
   }
 
@@ -189,10 +261,28 @@ resource "nsxt_policy_group" "users_service" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|users"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:service-name|users"
     }
   }
 
@@ -209,10 +299,28 @@ resource "nsxt_policy_group" "database_service" {
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|database"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:service-name|database"
     }
   }
 
@@ -223,16 +331,28 @@ resource "nsxt_policy_group" "database_service" {
 }
 
 resource "nsxt_policy_group" "music_store_all" {
-  display_name = "music-store"
+  display_name = "music-store-all"
   description  = "All music store services"
   domain       = "default"
 
   criteria {
     condition {
-      member_type = "VirtualMachine"
+      member_type = "Segment"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
+    }
+    condition {
+      member_type = "Pod"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "dis:k8s:env|prod"
     }
   }
 
