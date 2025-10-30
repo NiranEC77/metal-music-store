@@ -62,19 +62,6 @@ resource "nsxt_policy_group" "store_service" {
   
   criteria {
     condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
-  
-  criteria {
-    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -110,19 +97,6 @@ resource "nsxt_policy_group" "store_service" {
 }
 resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
-  
-  criteria {
-    condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
   
   criteria {
     condition {
@@ -164,19 +138,6 @@ resource "nsxt_policy_group" "order_service" {
   
   criteria {
     condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
-  
-  criteria {
-    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -212,19 +173,6 @@ resource "nsxt_policy_group" "order_service" {
 }
 resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
-  
-  criteria {
-    condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
   
   criteria {
     condition {
@@ -266,19 +214,6 @@ resource "nsxt_policy_group" "database_service" {
   
   criteria {
     condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
-  
-  criteria {
-    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -314,19 +249,6 @@ resource "nsxt_policy_group" "database_service" {
 }
 resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
-  
-  criteria {
-    condition {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
-  }
-  
-  conjunction {
-    operator = "AND"
-  }
   
   criteria {
     condition {
