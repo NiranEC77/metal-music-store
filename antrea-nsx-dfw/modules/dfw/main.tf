@@ -14,6 +14,11 @@ provider "nsxt" {
   allow_unverified_ssl = var.allow_unverified_ssl
 }
 
+# Data source for container cluster
+data "nsxt_policy_container_cluster" "antrea_cluster" {
+  display_name = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
+}
+
 # Services (ports)
 resource "nsxt_policy_service" "svc_tcp_5000" {
   display_name = "svc_tcp_5000"
@@ -198,6 +203,7 @@ resource "nsxt_policy_security_policy" "prod" {
   display_name = "prod"
   category     = "Application"
   stateful     = true
+  scope        = [data.nsxt_policy_container_cluster.antrea_cluster.path]
 
   rule {
     display_name        = "store->cart"
