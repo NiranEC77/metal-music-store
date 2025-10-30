@@ -78,8 +78,7 @@ resource "nsxt_policy_group" "store_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -92,8 +91,7 @@ resource "nsxt_policy_group" "store_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
   
@@ -106,8 +104,7 @@ resource "nsxt_policy_group" "store_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "store"
-      scope       = "dis:k8s:service-name"
+      value       = "dis:k8s:service-name|store"
     }
   }
 }
@@ -132,8 +129,7 @@ resource "nsxt_policy_group" "cart_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -146,8 +142,7 @@ resource "nsxt_policy_group" "cart_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
   
@@ -160,8 +155,7 @@ resource "nsxt_policy_group" "cart_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "cart"
-      scope       = "dis:k8s:service-name"
+      value       = "dis:k8s:service-name|cart"
     }
   }
 }
@@ -186,8 +180,7 @@ resource "nsxt_policy_group" "order_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -200,8 +193,7 @@ resource "nsxt_policy_group" "order_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
   
@@ -214,8 +206,7 @@ resource "nsxt_policy_group" "order_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "order"
-      scope       = "dis:k8s:service-name"
+      value       = "dis:k8s:service-name|order"
     }
   }
 }
@@ -240,8 +231,7 @@ resource "nsxt_policy_group" "users_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -254,8 +244,7 @@ resource "nsxt_policy_group" "users_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
   
@@ -268,8 +257,7 @@ resource "nsxt_policy_group" "users_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "users"
-      scope       = "dis:k8s:service-name"
+      value       = "dis:k8s:service-name|users"
     }
   }
 }
@@ -294,8 +282,7 @@ resource "nsxt_policy_group" "database_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -308,8 +295,7 @@ resource "nsxt_policy_group" "database_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
   
@@ -322,8 +308,7 @@ resource "nsxt_policy_group" "database_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "database"
-      scope       = "dis:k8s:service-name"
+      value       = "dis:k8s:service-name|database"
     }
   }
 }
@@ -348,8 +333,7 @@ resource "nsxt_policy_group" "music_store_app" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "music-store"
-      scope       = "dis:k8s:app-name"
+      value       = "dis:k8s:app-name|music-store"
     }
   }
   
@@ -362,8 +346,7 @@ resource "nsxt_policy_group" "music_store_app" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "prod"
-      scope       = "dis:k8s:env"
+      value       = "dis:k8s:env|prod"
     }
   }
 }
