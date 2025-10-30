@@ -62,7 +62,7 @@ resource "nsxt_policy_group" "store_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|store"
@@ -75,7 +75,7 @@ resource "nsxt_policy_group" "store_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -88,7 +88,7 @@ resource "nsxt_policy_group" "store_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
@@ -100,7 +100,7 @@ resource "nsxt_policy_group" "cart_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|cart"
@@ -113,7 +113,7 @@ resource "nsxt_policy_group" "cart_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -126,7 +126,7 @@ resource "nsxt_policy_group" "cart_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
@@ -138,7 +138,7 @@ resource "nsxt_policy_group" "order_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|order"
@@ -151,7 +151,7 @@ resource "nsxt_policy_group" "order_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -164,7 +164,7 @@ resource "nsxt_policy_group" "order_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
@@ -176,7 +176,7 @@ resource "nsxt_policy_group" "users_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|users"
@@ -189,7 +189,7 @@ resource "nsxt_policy_group" "users_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -202,7 +202,7 @@ resource "nsxt_policy_group" "users_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
@@ -214,7 +214,7 @@ resource "nsxt_policy_group" "database_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|database"
@@ -227,7 +227,7 @@ resource "nsxt_policy_group" "database_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -240,7 +240,7 @@ resource "nsxt_policy_group" "database_service" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
@@ -252,7 +252,7 @@ resource "nsxt_policy_group" "music_store_app" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
@@ -265,7 +265,7 @@ resource "nsxt_policy_group" "music_store_app" {
   
   criteria {
     condition {
-      member_type = "Pod"
+      member_type = "SegmentPort"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
