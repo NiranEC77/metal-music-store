@@ -60,25 +60,34 @@ resource "nsxt_policy_service" "svc_tcp_5432" {
 resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "service-name"
+      tag_operator   = "EQUALS"
       tag         = "store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
-    condition {
+    expression {
       member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
@@ -89,25 +98,34 @@ resource "nsxt_policy_group" "store_service" {
 resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "service-name"
+      tag_operator   = "EQUALS"
       tag         = "cart"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
-    condition {
+    expression {
       member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
@@ -118,25 +136,34 @@ resource "nsxt_policy_group" "cart_service" {
 resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "service-name"
+      tag_operator   = "EQUALS"
       tag         = "order"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
-    condition {
+    expression {
       member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
@@ -147,25 +174,34 @@ resource "nsxt_policy_group" "order_service" {
 resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "service-name"
+      tag_operator   = "EQUALS"
       tag         = "users"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
-    condition {
+    expression {
       member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
@@ -176,25 +212,34 @@ resource "nsxt_policy_group" "users_service" {
 resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "service-name"
+      tag_operator   = "EQUALS"
       tag         = "database"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
-    condition {
+    expression {
       member_type = "Namespace"
       key         = "Name"
       operator    = "EQUALS"
@@ -205,16 +250,22 @@ resource "nsxt_policy_group" "database_service" {
 resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
   criteria {
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "app-name"
+      tag_operator   = "EQUALS"
       tag         = "music-store"
     }
-    condition {
+    expression {
       member_type = "Pod"
+      key         = "Tag"
       operator    = "EQUALS"
+      scope_operator = "EQUALS"
       scope       = "env"
+      tag_operator   = "EQUALS"
       tag         = "prod"
     }
   }
