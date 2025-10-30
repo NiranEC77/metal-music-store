@@ -229,8 +229,7 @@ resource "nsxt_policy_group" "frontend" {
   display_name = "Music-store-frontend"
 }
 
-# Security policy
-# NOTE: Container cluster scope must be set manually in NSX-T UI after creation
+# Security policy with Antrea rules
 resource "nsxt_policy_security_policy" "prod" {
   display_name = "prod"
   category     = "Environment"
