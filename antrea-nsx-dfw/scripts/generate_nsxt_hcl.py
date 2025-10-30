@@ -88,7 +88,7 @@ def main(csv_path: str, out_dir: str):
     for r in rules:
         if len(r) < 23:
             continue
-        parent_path = r[1]
+        parent_path = (r[1] or '').strip().strip('"')
         action = r[2]
         rule_id_num = r[3]
         src_groups = parse_list_field(r[7])
@@ -97,7 +97,7 @@ def main(csv_path: str, out_dir: str):
         direction = r[16] or 'IN_OUT'
         display_name = r[35] if len(r) > 35 and r[35] else f"rule_{rule_id_num}"
 
-        if parent_path != '/infra/domains/default/security-policies/prod':
+        if 'security-policies/prod' not in parent_path:
             continue
 
         # try parse service entry list (inline L4 port definitions)
