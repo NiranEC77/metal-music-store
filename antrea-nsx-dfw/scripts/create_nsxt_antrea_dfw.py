@@ -154,21 +154,24 @@ class NSXTClient:
         if response.status_code in [200, 201]:
             print(f"✓ Created service: {display_name}")
             return response.json()
+        elif response.status_code == 400 and "already exists" in response.text:
+            print(f"⊙ Service already exists: {display_name}")
+            return {"path": f"/infra/services/{service_id}"}
         else:
             print(f"✗ Failed to create service {display_name}: {response.text}")
             return None
 
     def create_antrea_group(
-        self, group_id: str, display_name: str, tags: List[Dict], namespace: str
+        self, group_id: str, display_name: str, tags: List[Dict], namespace: str, container_cluster_id: str
     ) -> Dict:
         """Create an Antrea-type group with Pod membership criteria"""
         url = f"{self.base_url}/infra/domains/default/groups/{group_id}"
         
-        # Build membership criteria - use ConjunctionOperator to combine conditions
-        expressions = []
+        # Build membership criteria with proper ConjunctionOperator structure
+        conditions = []
         
         # Add namespace condition
-        expressions.append({
+        conditions.append({
             "resource_type": "Condition",
             "member_type": "Namespace",
             "key": "Name",
@@ -178,7 +181,7 @@ class NSXTClient:
         
         # Add Pod tag conditions - use pipe-separated format for scope|tag
         for tag_spec in tags:
-            expressions.append({
+            conditions.append({
                 "resource_type": "Condition",
                 "member_type": "Pod",
                 "key": "Tag",
@@ -186,9 +189,27 @@ class NSXTClient:
                 "value": f"{tag_spec['scope']}|{tag_spec['tag']}",
             })
         
+        # Build expression with ConjunctionOperator (AND) between conditions
+        expressions = []
+        for i, condition in enumerate(conditions):
+            expressions.append(condition)
+            # Add AND operator between conditions (but not after the last one)
+            if i < len(conditions) - 1:
+                expressions.append({
+                    "resource_type": "ConjunctionOperator",
+                    "conjunction_operator": "AND",
+                })
+        
+        # Specify the container cluster scope
+        cluster_path = f"/infra/sites/default/enforcement-points/default/container-clusters/{container_cluster_id}"
+        
         payload = {
             "display_name": display_name,
             "expression": expressions,
+            "extended_expression": [],
+            "reference": False,
+            "state": "IN_PROGRESS",
+            "scope": [cluster_path],
         }
         
         response = self.session.patch(url, json=payload, headers=self.headers)
@@ -271,7 +292,7 @@ def main():
     group_paths = {}
     for group in GROUPS:
         result = client.create_antrea_group(
-            group["id"], group["display_name"], group["tags"], NAMESPACE
+            group["id"], group["display_name"], group["tags"], NAMESPACE, CONTAINER_CLUSTER_ID
         )
         if result:
             group_paths[group["id"]] = f"/infra/domains/default/groups/{group['id']}"

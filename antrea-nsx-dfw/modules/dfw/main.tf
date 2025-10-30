@@ -59,134 +59,170 @@ resource "nsxt_policy_service" "svc_tcp_5432" {
 # Groups (label-based)
 resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|store"
+      value       = "dis:k8s:service-name|store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|cart"
+      value       = "dis:k8s:service-name|cart"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|order"
+      value       = "dis:k8s:service-name|order"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|users"
+      value       = "dis:k8s:service-name|users"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name|database"
+      value       = "dis:k8s:service-name|database"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
+  group_type   = "ANTREA"
+  
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name|music-store"
+      value       = "dis:k8s:app-name|music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env|prod"
+      value       = "dis:k8s:env|prod"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "frontend" {
