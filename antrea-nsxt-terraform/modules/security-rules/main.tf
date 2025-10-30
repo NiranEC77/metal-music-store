@@ -1,6 +1,14 @@
 # Security Rules Module
 # Creates security rules within a policy
 
+terraform {
+  required_providers {
+    nsxt = {
+      source = "vmware/nsxt"
+    }
+  }
+}
+
 resource "nsxt_policy_security_policy_rule" "rules" {
   for_each = { for idx, rule in var.rules : rule.display_name => rule }
 

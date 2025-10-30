@@ -1,6 +1,14 @@
 # Security Groups Module
 # Creates NSX-T security groups for Kubernetes services
 
+terraform {
+  required_providers {
+    nsxt = {
+      source = "vmware/nsxt"
+    }
+  }
+}
+
 resource "nsxt_policy_group" "service_groups" {
   for_each = var.groups
 

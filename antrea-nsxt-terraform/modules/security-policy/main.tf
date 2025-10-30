@@ -1,6 +1,14 @@
 # Security Policy Module
 # Creates NSX-T security policy with Antrea integration
 
+terraform {
+  required_providers {
+    nsxt = {
+      source = "vmware/nsxt"
+    }
+  }
+}
+
 resource "nsxt_policy_security_policy" "antrea_policy" {
   display_name    = var.policy_display_name
   description     = "Antrea-integrated security policy for ${var.policy_display_name}"
