@@ -289,7 +289,6 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = [nsxt_policy_group.cart_service.path]
     services            = [nsxt_policy_service.svc_tcp_5002.path]
-    scope               = [nsxt_policy_group.cart_service.path]
   }
   rule {
     display_name        = "store->users"
@@ -297,7 +296,6 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = [nsxt_policy_group.users_service.path]
     services            = [nsxt_policy_service.svc_tcp_5003.path]
-    scope               = [nsxt_policy_group.users_service.path]
   }
   rule {
     display_name        = "store->database"
@@ -305,7 +303,6 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = [nsxt_policy_group.database_service.path]
     services            = [nsxt_policy_service.svc_tcp_5432.path]
-    scope               = [nsxt_policy_group.database_service.path]
   }
   rule {
     display_name        = "frontend"
@@ -313,7 +310,6 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.frontend.path]
     destination_groups  = [nsxt_policy_group.music_store_app.path]
     services            = [nsxt_policy_service.svc_tcp_5000.path]
-    scope               = [nsxt_policy_group.music_store_app.path]
   }
   rule {
     display_name        = "cart->order"
@@ -321,7 +317,6 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.cart_service.path]
     destination_groups  = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
-    scope               = [nsxt_policy_group.order_service.path]
   }
   rule {
     display_name        = "store->order"
@@ -329,13 +324,11 @@ resource "nsxt_policy_security_policy" "prod" {
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
-    scope               = [nsxt_policy_group.order_service.path]
   }
   rule {
     display_name        = "cleanup"
     action              = "DROP"
     destination_groups  = [nsxt_policy_group.music_store_app.path]
-    scope               = [nsxt_policy_group.music_store_app.path]
   }
 }
 
