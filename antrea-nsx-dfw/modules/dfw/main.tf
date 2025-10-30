@@ -56,16 +56,6 @@ resource "nsxt_policy_service" "svc_tcp_5432" {
   }
 }
 
-# Container Cluster reference
-resource "nsxt_policy_group" "container_cluster" {
-  display_name = "container-cluster-scope"
-  criteria {
-    path_expression {
-      member_paths = ["/infra/sites/default/enforcement-points/default/container-clusters/a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"]
-    }
-  }
-}
-
 # Groups (label-based)
 resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
@@ -208,7 +198,7 @@ resource "nsxt_policy_security_policy" "prod" {
   display_name = "prod"
   category     = "Application"
   stateful     = true
-  scope        = [nsxt_policy_group.container_cluster.path]
+  scope        = ["/infra/sites/default/enforcement-points/default/container-clusters/a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"]
 
   rule {
     display_name        = "store->cart"
