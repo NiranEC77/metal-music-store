@@ -1,6 +1,0 @@
-nsxt_host = "nsx-manager.example.local"
-nsxt_username = "admin"
-nsxt_password = "REPLACE_WITH_PASSWORD"
-allow_unverified_ssl = true
-
-
