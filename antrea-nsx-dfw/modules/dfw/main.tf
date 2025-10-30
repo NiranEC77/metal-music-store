@@ -60,214 +60,53 @@ resource "nsxt_policy_service" "svc_tcp_5432" {
 resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "service-name"
-      tag_operator   = "EQUALS"
-      tag         = "store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
-    expression {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "service-name:store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "namespace:name:music-store" }
   }
 }
 resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "service-name"
-      tag_operator   = "EQUALS"
-      tag         = "cart"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
-    expression {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "service-name:cart" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "namespace:name:music-store" }
   }
 }
 resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "service-name"
-      tag_operator   = "EQUALS"
-      tag         = "order"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
-    expression {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "service-name:order" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "namespace:name:music-store" }
   }
 }
 resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "service-name"
-      tag_operator   = "EQUALS"
-      tag         = "users"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
-    expression {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "service-name:users" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "namespace:name:music-store" }
   }
 }
 resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "service-name"
-      tag_operator   = "EQUALS"
-      tag         = "database"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
-    expression {
-      member_type = "Namespace"
-      key         = "Name"
-      operator    = "EQUALS"
-      value       = "music-store"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "service-name:database" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "namespace:name:music-store" }
   }
 }
 resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
   criteria {
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "app-name"
-      tag_operator   = "EQUALS"
-      tag         = "music-store"
-    }
-    expression {
-      member_type = "Pod"
-      key         = "Tag"
-      operator    = "EQUALS"
-      scope_operator = "EQUALS"
-      scope       = "env"
-      tag_operator   = "EQUALS"
-      tag         = "prod"
-    }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "app-name:music-store" }
+    condition { member_type = "SegmentPort" key = "Tag" operator = "EQUALS" value = "env:prod" }
   }
 }
 resource "nsxt_policy_group" "frontend" {
