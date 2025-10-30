@@ -61,28 +61,28 @@ resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "service-name:store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
     }
     condition {
-      member_type = "SegmentPort"
-      key         = "Tag"
+      member_type = "Namespace"
+      key         = "Name"
       operator    = "EQUALS"
-      value       = "namespace:name:music-store"
+      value       = "music-store"
     }
   }
 }
@@ -90,28 +90,28 @@ resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "service-name:cart"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
     }
     condition {
-      member_type = "SegmentPort"
-      key         = "Tag"
+      member_type = "Namespace"
+      key         = "Name"
       operator    = "EQUALS"
-      value       = "namespace:name:music-store"
+      value       = "music-store"
     }
   }
 }
@@ -119,28 +119,28 @@ resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "service-name:order"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
     }
     condition {
-      member_type = "SegmentPort"
-      key         = "Tag"
+      member_type = "Namespace"
+      key         = "Name"
       operator    = "EQUALS"
-      value       = "namespace:name:music-store"
+      value       = "music-store"
     }
   }
 }
@@ -148,28 +148,28 @@ resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "service-name:users"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
     }
     condition {
-      member_type = "SegmentPort"
-      key         = "Tag"
+      member_type = "Namespace"
+      key         = "Name"
       operator    = "EQUALS"
-      value       = "namespace:name:music-store"
+      value       = "music-store"
     }
   }
 }
@@ -177,28 +177,28 @@ resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "service-name:database"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
     }
     condition {
-      member_type = "SegmentPort"
-      key         = "Tag"
+      member_type = "Namespace"
+      key         = "Name"
       operator    = "EQUALS"
-      value       = "namespace:name:music-store"
+      value       = "music-store"
     }
   }
 }
@@ -206,13 +206,13 @@ resource "nsxt_policy_group" "music_store_app" {
   display_name = "music-store"
   criteria {
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "app-name:music-store"
     }
     condition {
-      member_type = "SegmentPort"
+      member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "env:prod"
@@ -234,7 +234,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
-    destination_groups  = [nsxt_policy_group.cart_service.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.cart_service.path]
     services            = [nsxt_policy_service.svc_tcp_5002.path]
   }
   rule {
@@ -242,7 +243,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
-    destination_groups  = [nsxt_policy_group.users_service.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.users_service.path]
     services            = [nsxt_policy_service.svc_tcp_5003.path]
   }
   rule {
@@ -250,7 +252,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
-    destination_groups  = [nsxt_policy_group.database_service.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.database_service.path]
     services            = [nsxt_policy_service.svc_tcp_5432.path]
   }
   rule {
@@ -258,7 +261,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.frontend.path]
-    destination_groups  = [nsxt_policy_group.music_store_app.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.music_store_app.path]
     services            = [nsxt_policy_service.svc_tcp_5000.path]
   }
   rule {
@@ -266,7 +270,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.cart_service.path]
-    destination_groups  = [nsxt_policy_group.order_service.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
   }
   rule {
@@ -274,7 +279,8 @@ resource "nsxt_policy_security_policy" "prod" {
     action              = "ALLOW"
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
-    destination_groups  = [nsxt_policy_group.order_service.path]
+    destination_groups  = []
+    applied_to          = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
   }
   rule {
