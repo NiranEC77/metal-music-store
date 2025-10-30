@@ -285,7 +285,7 @@ resource "nsxt_policy_security_policy_rule" "frontend" {
   logged             = false
   disabled           = false
 
-  source_groups      = ["ANY"]
+  # source_groups omitted = ANY
   destination_groups = [nsxt_policy_group.music_store_frontend.path]
   services           = [nsxt_policy_service.tcp_5000.path]
   scope              = [nsxt_policy_group.music_store_frontend.path]
@@ -435,9 +435,7 @@ resource "nsxt_policy_security_policy_rule" "cleanup" {
   logged             = false
   disabled           = false
 
-  source_groups      = ["ANY"]
-  destination_groups = ["ANY"]
-  services           = ["ANY"]
+  # All omitted = ANY for source, destination, and services
   scope              = [nsxt_policy_group.music_store_all.path]
 
   tag {
