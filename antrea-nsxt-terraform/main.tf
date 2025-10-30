@@ -247,7 +247,7 @@ resource "nsxt_policy_group" "music_store_all" {
 #############################################
 
 resource "nsxt_policy_security_policy" "music_store_prod" {
-  display_name    = "music-store-prod"
+  display_name    = "tf-music-store-prod"
   description     = "Antrea-integrated security policy for music store production"
   category        = "Application"
   domain          = "default"
@@ -292,7 +292,7 @@ resource "nsxt_policy_security_policy_rule" "frontend" {
   disabled           = false
 
   # source_groups omitted = ANY
-  destination_groups = [nsxt_policy_group.music_store_frontend.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5000.path]
   scope              = [nsxt_policy_group.music_store_frontend.path]
 
@@ -317,7 +317,7 @@ resource "nsxt_policy_security_policy_rule" "store_to_cart" {
   disabled           = false
 
   source_groups      = [nsxt_policy_group.store_service.path]
-  destination_groups = [nsxt_policy_group.cart_service.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5002.path]
   scope              = [nsxt_policy_group.cart_service.path]
 
@@ -342,7 +342,7 @@ resource "nsxt_policy_security_policy_rule" "store_to_users" {
   disabled           = false
 
   source_groups      = [nsxt_policy_group.store_service.path]
-  destination_groups = [nsxt_policy_group.users_service.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5003.path]
   scope              = [nsxt_policy_group.users_service.path]
 
@@ -367,7 +367,7 @@ resource "nsxt_policy_security_policy_rule" "store_to_database" {
   disabled           = false
 
   source_groups      = [nsxt_policy_group.store_service.path]
-  destination_groups = [nsxt_policy_group.database_service.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5432.path]
   scope              = [nsxt_policy_group.database_service.path]
 
@@ -392,7 +392,7 @@ resource "nsxt_policy_security_policy_rule" "store_to_order" {
   disabled           = false
 
   source_groups      = [nsxt_policy_group.store_service.path]
-  destination_groups = [nsxt_policy_group.order_service.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5001.path]
   scope              = [nsxt_policy_group.order_service.path]
 
@@ -417,7 +417,7 @@ resource "nsxt_policy_security_policy_rule" "cart_to_order" {
   disabled           = false
 
   source_groups      = [nsxt_policy_group.cart_service.path]
-  destination_groups = [nsxt_policy_group.order_service.path]
+  # destination_groups omitted for Antrea - use scope (applied to) instead
   services           = [nsxt_policy_service.tcp_5001.path]
   scope              = [nsxt_policy_group.order_service.path]
 
