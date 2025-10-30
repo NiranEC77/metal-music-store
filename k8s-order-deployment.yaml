@@ -37,6 +37,9 @@ spec:
     metadata:
       labels:
         app: order-service
+        app-name: music-store
+        service-name: order
+        env: prod
       annotations:
         kubernetes.io/change-cause: "Updated styling - brighter background and metal theme"
     spec:

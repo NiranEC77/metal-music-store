@@ -22,6 +22,9 @@ spec:
     metadata:
       labels:
         app: music-store-1
+        app-name: music-store
+        service-name: store
+        env: prod
       annotations:
         kubernetes.io/change-cause: "Added cart dropdown notification, fixed cart clearing, updated success message"
         date: "2024-01-$(date +%d)"

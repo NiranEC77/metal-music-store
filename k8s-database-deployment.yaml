@@ -37,6 +37,9 @@ spec:
     metadata:
       labels:
         app: postgres
+        app-name: music-store
+        service-name: database
+        env: prod
     spec:
       securityContext:
         runAsNonRoot: true

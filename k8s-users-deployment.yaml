@@ -4,6 +4,9 @@ metadata:
   name: users-service
   labels:
     app: users-service
+    app-name: music-store
+    service-name: users
+    env: prod
 spec:
   replicas: 1
   selector:
@@ -13,6 +16,9 @@ spec:
     metadata:
       labels:
         app: users-service
+        app-name: music-store
+        service-name: users
+        env: prod
     spec:
       securityContext:
         runAsNonRoot: true
@@ -74,6 +80,9 @@ metadata:
   name: users-service
   labels:
     app: users-service
+    app-name: music-store
+    service-name: users
+    env: prod
 spec:
   selector:
     app: users-service
