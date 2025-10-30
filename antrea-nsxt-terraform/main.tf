@@ -255,8 +255,9 @@ resource "nsxt_policy_security_policy" "music_store_prod" {
   stateful        = true
   tcp_strict      = true
 
-  # Scope to the Antrea cluster control plane
-  scope = ["/infra/sites/default/enforcement-points/default/cluster-control-planes/${var.cluster_control_plane_id}"]
+  # Scope omitted = applies to ANY (cluster association handled by Antrea)
+  # Note: The cluster control plane association is managed automatically by Antrea
+  # when resources have matching labels/tags
 
   tag {
     scope = "managed-by"
@@ -266,6 +267,11 @@ resource "nsxt_policy_security_policy" "music_store_prod" {
   tag {
     scope = "environment"
     tag   = "production"
+  }
+
+  tag {
+    scope = "cluster"
+    tag   = var.cluster_control_plane_id
   }
 }
 
