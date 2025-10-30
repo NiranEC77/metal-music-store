@@ -277,11 +277,11 @@ resource "nsxt_policy_group" "frontend" {
 }
 
 # Security policy with Antrea rules
-# NOTE: Container cluster scope must be set manually in NSX-T UI after creation
 resource "nsxt_policy_security_policy" "prod" {
   display_name = "prod"
   category     = "Environment"
   stateful     = true
+  scope        = ["/infra/sites/default/enforcement-points/default/container-clusters/a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"]
 
   rule {
     display_name        = "store->cart"
