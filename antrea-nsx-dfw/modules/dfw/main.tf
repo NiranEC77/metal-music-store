@@ -235,7 +235,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.cart_service.path]
+    scope               = [nsxt_policy_group.cart_service.path]
     services            = [nsxt_policy_service.svc_tcp_5002.path]
   }
   rule {
@@ -244,7 +244,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.users_service.path]
+    scope               = [nsxt_policy_group.users_service.path]
     services            = [nsxt_policy_service.svc_tcp_5003.path]
   }
   rule {
@@ -253,7 +253,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.database_service.path]
+    scope               = [nsxt_policy_group.database_service.path]
     services            = [nsxt_policy_service.svc_tcp_5432.path]
   }
   rule {
@@ -262,7 +262,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.frontend.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.music_store_app.path]
+    scope               = [nsxt_policy_group.music_store_app.path]
     services            = [nsxt_policy_service.svc_tcp_5000.path]
   }
   rule {
@@ -271,7 +271,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.cart_service.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.order_service.path]
+    scope               = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
   }
   rule {
@@ -280,7 +280,7 @@ resource "nsxt_policy_security_policy" "prod" {
     direction           = "IN"
     source_groups       = [nsxt_policy_group.store_service.path]
     destination_groups  = []
-    applied_to          = [nsxt_policy_group.order_service.path]
+    scope               = [nsxt_policy_group.order_service.path]
     services            = [nsxt_policy_service.svc_tcp_5001.path]
   }
   rule {
