@@ -68,22 +68,32 @@ resource "nsxt_policy_group" "store_service" {
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "cart_service" {
@@ -97,22 +107,32 @@ resource "nsxt_policy_group" "cart_service" {
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|cart"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "order_service" {
@@ -126,22 +146,32 @@ resource "nsxt_policy_group" "order_service" {
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|order"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "users_service" {
@@ -155,22 +185,32 @@ resource "nsxt_policy_group" "users_service" {
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|users"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "database_service" {
@@ -184,22 +224,32 @@ resource "nsxt_policy_group" "database_service" {
       operator    = "EQUALS"
       value       = "dis:k8s:service-name|database"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "music_store_app" {
@@ -213,16 +263,19 @@ resource "nsxt_policy_group" "music_store_app" {
       operator    = "EQUALS"
       value       = "dis:k8s:app-name|music-store"
     }
+  }
+  
+  conjunction {
+    operator = "AND"
+  }
+  
+  criteria {
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
       value       = "dis:k8s:env|prod"
     }
-  }
-  
-  conjunction {
-    operator = "AND"
   }
 }
 resource "nsxt_policy_group" "frontend" {
