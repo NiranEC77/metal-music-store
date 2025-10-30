@@ -1,137 +1,165 @@
-# Antrea NSX-T Terraform Automation
+# Antrea NSX-T Terraform Configuration
 
-This Terraform configuration manages NSX-T distributed firewall (DFW) rules for the music store application with Antrea integration.
+Simple Terraform configuration to manage NSX-T distributed firewall (DFW) rules for the music store application with Antrea integration.
 
-## Overview
-
-This automation creates:
-- **Security Groups**: Based on Kubernetes pod labels
-- **Security Policy**: Antrea-integrated policy associated with the cluster
-- **Security Rules**: Micro-segmentation rules controlling traffic between services
-
-## Architecture
-
-The configuration uses a modular structure:
+## Structure
 
 ```
 antrea-nsxt-terraform/
-├── main.tf                          # Main Terraform configuration
-├── variables.tf                     # Variable definitions
-├── terraform.tfvars.example         # Example variable values (copy to terraform.tfvars)
-├── README.md                        # This file
-└── modules/
-    ├── security-groups/             # Security group module
-    │   ├── main.tf
-    │   ├── variables.tf
-    │   └── outputs.tf
-    ├── security-policy/             # Security policy module
-    │   ├── main.tf
-    │   ├── variables.tf
-    │   └── outputs.tf
-    └── security-rules/              # Security rules module
-        ├── main.tf
-        ├── variables.tf
-        └── outputs.tf
+├── main.tf                      # All resources defined here
+├── variables.tf                 # Connection variables only
+├── outputs.tf                   # Output definitions
+├── terraform.tfvars.example     # Example connection config
+└── README.md                    # This file
 ```
 
-## Prerequisites
+## What Gets Created
 
-1. **NSX-T Manager** with Antrea integration configured
-2. **Terraform** >= 1.0
-3. **Kubernetes cluster** with Antrea CNI
-4. **Cluster Control Plane ID** from NSX-T
+### Services (5)
+- `tcp-5000` - Frontend HTTP
+- `tcp-5001` - Order service
+- `tcp-5002` - Cart service
+- `tcp-5003` - Users service
+- `tcp-5432` - PostgreSQL
 
-## Security Rules
+### Security Groups (7)
+Based on Kubernetes pod labels:
+- `Music-store-frontend` - Tag: `app|music-store-1`
+- `store-service` - Tag: `service-name|store`
+- `cart-service` - Tag: `service-name|cart`
+- `order-service` - Tag: `service-name|order`
+- `users-service` - Tag: `service-name|users`
+- `database-service` - Tag: `service-name|database`
+- `music-store` - Tag: `app-name|music-store` (all services)
 
-The configuration creates the following micro-segmentation rules:
+### Security Policy (1)
+- `music-store-prod` - Application category, sequence 499999
+- Scoped to Antrea cluster control plane
 
-| Rule Name | Source | Destination | Port | Protocol | Action | Description |
-|-----------|--------|-------------|------|----------|--------|-------------|
-| frontend | ANY | Music-store-frontend | 5000 | TCP | ALLOW | External access to frontend |
-| store->cart | store-service | cart-service | 5002 | TCP | ALLOW | Store to cart communication |
-| store->users | store-service | users-service | 5003 | TCP | ALLOW | Store to users communication |
-| store->database | store-service | database-service | 5432 | TCP | ALLOW | Store to database communication |
-| store->order | store-service | order-service | 5001 | TCP | ALLOW | Store to order communication |
-| cart->order | cart-service | order-service | 5001 | TCP | ALLOW | Cart to order communication |
-| cleanup | ANY | ANY | ANY | ANY | DROP | Default deny for music-store |
+### Security Rules (7)
+1. **frontend** (249999) - ANY → frontend:5000 ✅ ALLOW
+2. **store→cart** (124999) - store → cart:5002 ✅ ALLOW
+3. **store→users** (31249) - store → users:5003 ✅ ALLOW
+4. **store→database** (15624) - store → db:5432 ✅ ALLOW
+5. **store→order** (62499) - store → order:5001 ✅ ALLOW
+6. **cart→order** (7812) - cart → order:5001 ✅ ALLOW
+7. **cleanup** (499999) - ANY → ANY (music-store scope) ❌ DROP
 
-## Security Groups
+## Quick Start
 
-Security groups are created based on Kubernetes pod labels:
-
-| Group Name | Label Match | Description |
-|------------|-------------|-------------|
-| Music-store-frontend | app=music-store-1 | Frontend service |
-| store-service | service-name=store | Main store service |
-| cart-service | service-name=cart | Shopping cart service |
-| order-service | service-name=order | Order processing service |
-| users-service | service-name=users | User management service |
-| database-service | service-name=database | PostgreSQL database |
-| music-store | app-name=music-store | All music store services |
-
-## Setup Instructions
-
-### 1. Copy Example Configuration
+### 1. Configure Connection
 
 ```bash
-cd antrea-nsxt-terraform
 cp terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
 ```
 
-### 2. Edit Configuration
-
-Edit `terraform.tfvars` with your environment details:
-
+Edit with your NSX-T details:
 ```hcl
-nsx_manager = "your-nsx-manager.example.com"
-nsx_username = "admin"
-nsx_password = "your-secure-password"
-cluster_control_plane_id = "your-cluster-id"
+nsx_manager              = "your-nsx-manager.example.com"
+nsx_username             = "admin"
+nsx_password             = "your-password"
+cluster_control_plane_id = "your-antrea-cluster-id"
 ```
 
-**Important**: The `cluster_control_plane_id` is your Antrea cluster ID. You provided:
-```
-a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea
-```
-
-### 3. Initialize Terraform
+### 2. Deploy
 
 ```bash
 terraform init
+terraform plan
+terraform apply
 ```
 
-### 4. Review Plan
+### 3. Verify
 
 ```bash
-terraform plan
+terraform output
 ```
 
-### 5. Apply Configuration
+## Modifying Rules
 
+All configuration is in `main.tf`. To modify:
+
+### Add a New Service
+
+```hcl
+resource "nsxt_policy_service" "tcp_8080" {
+  display_name = "tcp-8080"
+  description  = "Custom service on 8080"
+  
+  l4_port_set_entry {
+    display_name      = "tcp-8080"
+    protocol          = "TCP"
+    destination_ports = ["8080"]
+  }
+
+  tag {
+    scope = "managed-by"
+    tag   = "terraform"
+  }
+}
+```
+
+### Add a New Security Group
+
+```hcl
+resource "nsxt_policy_group" "new_service" {
+  display_name = "new-service"
+  description  = "New service group"
+  domain       = "default"
+
+  criteria {
+    condition {
+      member_type = "VirtualMachine"
+      key         = "Tag"
+      operator    = "EQUALS"
+      value       = "service-name|new-service"
+    }
+  }
+
+  tag {
+    scope = "managed-by"
+    tag   = "terraform"
+  }
+}
+```
+
+### Add a New Rule
+
+```hcl
+resource "nsxt_policy_security_policy_rule" "new_rule" {
+  display_name       = "store->new-service"
+  description        = "Allow store to access new service"
+  policy_path        = nsxt_policy_security_policy.music_store_prod.path
+  sequence_number    = 50000
+  action             = "ALLOW"
+  direction          = "IN"
+  ip_version         = "IPV4_IPV6"
+  logged             = false
+  disabled           = false
+
+  source_groups      = [nsxt_policy_group.store_service.path]
+  destination_groups = [nsxt_policy_group.new_service.path]
+  services           = [nsxt_policy_service.tcp_8080.path]
+  scope              = [nsxt_policy_group.new_service.path]
+
+  tag {
+    scope = "managed-by"
+    tag   = "terraform"
+  }
+
+  depends_on = [nsxt_policy_group.store_service, nsxt_policy_group.new_service]
+}
+```
+
+Then apply:
 ```bash
 terraform apply
 ```
 
-## Configuration Variables
-
-### Required Variables
-
-- `nsx_manager`: NSX-T Manager hostname or IP
-- `nsx_username`: NSX-T admin username
-- `nsx_password`: NSX-T admin password (stored in terraform.tfvars, which is gitignored)
-- `cluster_control_plane_id`: Antrea cluster control plane ID
-
-### Optional Variables
-
-- `allow_unverified_ssl`: Allow self-signed certificates (default: true)
-- `domain`: NSX-T domain (default: "default")
-- `policy_name`: Policy ID (default: "prod")
-- `policy_display_name`: Policy display name (default: "music-store-prod")
-- `policy_sequence_number`: Policy sequence (default: 499999)
-
 ## Kubernetes Label Requirements
 
-Ensure your Kubernetes deployments have the appropriate labels for security group matching:
+Ensure your deployments have the correct labels:
 
 ```yaml
 apiVersion: apps/v1
@@ -142,78 +170,47 @@ spec:
   template:
     metadata:
       labels:
-        app: music-store-1
-        app-name: music-store
-        service-name: store
+        app: music-store-1           # For frontend group
+        app-name: music-store         # For music-store-all group
+        service-name: store           # For store-service group
         env: prod
-```
-
-## Security Considerations
-
-1. **Passwords**: Never commit `terraform.tfvars` to git (it's gitignored)
-2. **State Files**: Terraform state may contain sensitive data - use remote backends
-3. **Least Privilege**: Rules follow zero-trust principles
-4. **Default Deny**: The cleanup rule drops all traffic not explicitly allowed
-
-## Terraform State Management
-
-For production, use a remote backend:
-
-```hcl
-terraform {
-  backend "s3" {
-    bucket = "your-terraform-state"
-    key    = "antrea-nsxt/terraform.tfstate"
-    region = "us-west-2"
-  }
-}
 ```
 
 ## Troubleshooting
 
-### Check NSX-T Connection
+### Check Resources
 
 ```bash
-terraform console
-```
-
-Then test:
-```hcl
-data.nsxt_policy_site.default
-```
-
-### Verify Cluster ID
-
-Log into NSX-T Manager UI:
-1. Navigate to Inventory → Container Clusters
-2. Find your Antrea cluster
-3. Verify the cluster ID matches your configuration
-
-### Review Created Resources
-
-```bash
-# List all resources
 terraform state list
-
-# Show specific resource
-terraform state show nsxt_policy_security_policy.antrea_policy
+terraform state show nsxt_policy_security_policy.music_store_prod
 ```
 
-## Maintenance
+### Enable Rule Logging
 
-### Update Rules
+In `main.tf`, change `logged = false` to `logged = true` for any rule:
 
-1. Edit `terraform.tfvars`
-2. Run `terraform plan` to review changes
-3. Run `terraform apply` to apply changes
+```hcl
+resource "nsxt_policy_security_policy_rule" "frontend" {
+  # ... other config
+  logged = true  # Enable logging
+}
+```
 
-### Add New Service
+Then apply:
+```bash
+terraform apply
+```
 
-1. Add new security group to `security_groups` map
-2. Add corresponding rules to `security_rules` list
-3. Apply changes
+### Verify in NSX-T UI
 
-### Destroy Resources
+1. Log into NSX-T Manager
+2. Navigate to **Security** → **Distributed Firewall**
+3. Look for policy: **music-store-prod**
+4. Verify all 7 rules are present
+
+## Cleanup
+
+To remove all resources:
 
 ```bash
 terraform destroy
@@ -223,14 +220,5 @@ terraform destroy
 
 ## References
 
-- [NSX-T Terraform Provider Documentation](https://registry.terraform.io/providers/vmware/nsxt/latest/docs)
+- [NSX-T Terraform Provider](https://registry.terraform.io/providers/vmware/nsxt/latest/docs)
 - [Antrea Documentation](https://antrea.io/docs/)
-- [NSX-T Antrea Integration Guide](https://docs.vmware.com/en/VMware-NSX-T-Data-Center/index.html)
-
-## Support
-
-For issues or questions:
-1. Review Terraform logs: `TF_LOG=DEBUG terraform apply`
-2. Check NSX-T Manager logs
-3. Verify Antrea integration status in NSX-T UI
-
