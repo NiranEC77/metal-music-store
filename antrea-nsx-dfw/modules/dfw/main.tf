@@ -64,19 +64,22 @@ resource "nsxt_policy_group" "store_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name:store"
+      scope       = "service-name"
+      value       = "store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -93,19 +96,22 @@ resource "nsxt_policy_group" "cart_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name:cart"
+      scope       = "service-name"
+      value       = "cart"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -122,19 +128,22 @@ resource "nsxt_policy_group" "order_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name:order"
+      scope       = "service-name"
+      value       = "order"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -151,19 +160,22 @@ resource "nsxt_policy_group" "users_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name:users"
+      scope       = "service-name"
+      value       = "users"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -180,19 +192,22 @@ resource "nsxt_policy_group" "database_service" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "service-name:database"
+      scope       = "service-name"
+      value       = "database"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -209,13 +224,15 @@ resource "nsxt_policy_group" "music_store_app" {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "app-name:music-store"
+      scope       = "app-name"
+      value       = "music-store"
     }
     condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
-      value       = "env:prod"
+      scope       = "env"
+      value       = "prod"
     }
   }
 }
