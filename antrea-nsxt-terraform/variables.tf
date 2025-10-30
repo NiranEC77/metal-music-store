@@ -73,6 +73,16 @@ variable "policy_scope_groups" {
   default     = []
 }
 
+variable "custom_services" {
+  description = "Map of custom services to create"
+  type = map(object({
+    description       = string
+    protocol          = string
+    destination_ports = list(string)
+  }))
+  default = {}
+}
+
 variable "security_groups" {
   description = "Map of security groups to create"
   type = map(object({
@@ -97,8 +107,7 @@ variable "security_rules" {
     source_groups        = list(string)
     destination_groups   = list(string)
     services             = list(string)
-    destination_ports    = list(string)
-    protocol             = string
+    service_name         = string
     scope_groups         = list(string)
     direction            = string
     logged               = bool

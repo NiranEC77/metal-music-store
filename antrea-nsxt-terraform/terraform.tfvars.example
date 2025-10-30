@@ -89,6 +89,35 @@ security_groups = {
   }
 }
 
+# Custom Services - Define port-based services
+custom_services = {
+  "tcp-5000" = {
+    description       = "HTTP port 5000"
+    protocol          = "TCP"
+    destination_ports = ["5000"]
+  }
+  "tcp-5001" = {
+    description       = "Order service port 5001"
+    protocol          = "TCP"
+    destination_ports = ["5001"]
+  }
+  "tcp-5002" = {
+    description       = "Cart service port 5002"
+    protocol          = "TCP"
+    destination_ports = ["5002"]
+  }
+  "tcp-5003" = {
+    description       = "Users service port 5003"
+    protocol          = "TCP"
+    destination_ports = ["5003"]
+  }
+  "tcp-5432" = {
+    description       = "PostgreSQL port 5432"
+    protocol          = "TCP"
+    destination_ports = ["5432"]
+  }
+}
+
 # Security Rules - based on CSV data
 security_rules = [
   {
@@ -99,8 +128,7 @@ security_rules = [
     source_groups      = ["ANY"]
     destination_groups = ["Music-store-frontend"]
     services           = []
-    destination_ports  = ["5000"]
-    protocol           = "TCP"
+    service_name       = "tcp-5000"
     scope_groups       = ["Music-store-frontend"]
     direction          = "IN"
     logged             = false
@@ -114,8 +142,7 @@ security_rules = [
     source_groups      = ["store-service"]
     destination_groups = ["cart-service"]
     services           = []
-    destination_ports  = ["5002"]
-    protocol           = "TCP"
+    service_name       = "tcp-5002"
     scope_groups       = ["cart-service"]
     direction          = "IN"
     logged             = false
@@ -129,8 +156,7 @@ security_rules = [
     source_groups      = ["store-service"]
     destination_groups = ["users-service"]
     services           = []
-    destination_ports  = ["5003"]
-    protocol           = "TCP"
+    service_name       = "tcp-5003"
     scope_groups       = ["users-service"]
     direction          = "IN"
     logged             = false
@@ -144,8 +170,7 @@ security_rules = [
     source_groups      = ["store-service"]
     destination_groups = ["database-service"]
     services           = []
-    destination_ports  = ["5432"]
-    protocol           = "TCP"
+    service_name       = "tcp-5432"
     scope_groups       = ["database-service"]
     direction          = "IN"
     logged             = false
@@ -159,8 +184,7 @@ security_rules = [
     source_groups      = ["store-service"]
     destination_groups = ["order-service"]
     services           = []
-    destination_ports  = ["5001"]
-    protocol           = "TCP"
+    service_name       = "tcp-5001"
     scope_groups       = ["order-service"]
     direction          = "IN"
     logged             = false
@@ -174,8 +198,7 @@ security_rules = [
     source_groups      = ["cart-service"]
     destination_groups = ["order-service"]
     services           = []
-    destination_ports  = ["5001"]
-    protocol           = "TCP"
+    service_name       = "tcp-5001"
     scope_groups       = ["order-service"]
     direction          = "IN"
     logged             = false
@@ -189,8 +212,7 @@ security_rules = [
     source_groups      = ["ANY"]
     destination_groups = ["ANY"]
     services           = ["ANY"]
-    destination_ports  = []
-    protocol           = ""
+    service_name       = ""
     scope_groups       = ["music-store"]
     direction          = "IN"
     logged             = false

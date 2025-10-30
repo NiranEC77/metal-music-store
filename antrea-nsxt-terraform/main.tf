@@ -14,6 +14,13 @@ provider "nsxt" {
   allow_unverified_ssl = var.allow_unverified_ssl
 }
 
+# Create custom services for port-based rules
+module "services" {
+  source = "./modules/services"
+
+  services = var.custom_services
+}
+
 # Create security groups for services
 module "security_groups" {
   source = "./modules/security-groups"
@@ -43,10 +50,11 @@ module "security_policy" {
 module "security_rules" {
   source = "./modules/security-rules"
 
-  domain      = var.domain
-  policy_path = module.security_policy.policy_path
-  rules       = var.security_rules
+  domain         = var.domain
+  policy_path    = module.security_policy.policy_path
+  rules          = var.security_rules
+  service_paths  = module.services.service_paths
 
-  depends_on = [module.security_policy, module.security_groups]
+  depends_on = [module.security_policy, module.security_groups, module.services]
 }
 
