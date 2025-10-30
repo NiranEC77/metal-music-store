@@ -36,34 +36,40 @@ def main(csv_path: str, out_dir: str):
         reader = csv.reader(f)
         rows = list(reader)
 
-    # split by header lines
+    # Find headers and parse sections robustly
     i = 0
     while i < len(rows):
         row = rows[i]
         if not row:
             i += 1
             continue
-        header = row[0]
-        if header == 'SecurityPolicyDto':
-            # Move past the header line only
-            i += 1
-            while i < len(rows) and rows[i] and rows[i][0] != 'RuleDto' and rows[i][0] != 'SecurityPolicyContainerClusterDto':
-                policies.append(rows[i])
-                i += 1
-        elif header == 'RuleDto':
-            # Move past the header line only
-            i += 1
-            while i < len(rows) and rows[i] and rows[i][0] != 'SecurityPolicyContainerClusterDto' and rows[i][0] != 'SecurityPolicyDto':
-                rules.append(rows[i])
-                i += 1
-        else:
-            i += 1
+        if row[0] == 'SecurityPolicyDto':
+            # Next line is headers for policies
+            if i + 1 < len(rows):
+                pol_headers = rows[i + 1]
+                j = i + 2
+                while j < len(rows) and rows[j] and rows[j][0] not in ('RuleDto', 'SecurityPolicyContainerClusterDto', 'SecurityPolicyDto'):
+                    policies.append(dict(zip(pol_headers, rows[j])))
+                    j += 1
+                i = j
+                continue
+        if row[0] == 'RuleDto':
+            # Next line is headers for rules
+            if i + 1 < len(rows):
+                rule_headers = rows[i + 1]
+                j = i + 2
+                while j < len(rows) and rows[j] and rows[j][0] not in ('SecurityPolicyContainerClusterDto', 'SecurityPolicyDto', 'RuleDto'):
+                    rules.append(dict(zip(rule_headers, rows[j])))
+                    j += 1
+                i = j
+                continue
+        i += 1
 
     # Minimal policy set: capture the prod policy line
     prod_policy = None
     for p in policies:
-        # path is column 1
-        if len(p) > 1 and p[1] == '/infra/domains/default/security-policies/prod':
+        path_val = p.get('path') or ''
+        if path_val.strip().strip('"') == '/infra/domains/default/security-policies/prod':
             prod_policy = p
             break
 
@@ -86,16 +92,14 @@ def main(csv_path: str, out_dir: str):
     unique_ports = set()
     unique_groups = set()
     for r in rules:
-        if len(r) < 23:
-            continue
-        parent_path = (r[1] or '').strip().strip('"')
-        action = r[2]
-        rule_id_num = r[3]
-        src_groups = parse_list_field(r[7])
-        dst_groups = parse_list_field(r[8])
-        service_entries = r[10]
-        direction = r[16] or 'IN_OUT'
-        display_name = r[35] if len(r) > 35 and r[35] else f"rule_{rule_id_num}"
+        parent_path = ((r.get('parentPath') or '').strip().strip('"'))
+        action = (r.get('action') or '').strip().upper()
+        rule_id_num = r.get('ruleId') or '0'
+        src_groups = parse_list_field(r.get('sourceGroups') or '')
+        dst_groups = parse_list_field(r.get('destinationGroups') or '')
+        service_entries = r.get('serviceEntries') or ''
+        direction = (r.get('direction') or 'IN_OUT').strip()
+        display_name = (r.get('displayName') or f"rule_{rule_id_num}")
 
         if 'security-policies/prod' not in parent_path:
             continue
