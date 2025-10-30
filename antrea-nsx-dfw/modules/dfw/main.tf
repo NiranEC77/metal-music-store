@@ -280,7 +280,7 @@ resource "nsxt_policy_group" "frontend" {
 # NOTE: Container cluster scope must be set manually in NSX-T UI after creation
 resource "nsxt_policy_security_policy" "prod" {
   display_name = "prod"
-  category     = "Application"
+  category     = "Environment"
   stateful     = true
 
   rule {
