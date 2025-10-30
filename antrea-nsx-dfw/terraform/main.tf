@@ -1,0 +1,5 @@
+module "dfw" {
+  source = "../generated"
+}
+
+
