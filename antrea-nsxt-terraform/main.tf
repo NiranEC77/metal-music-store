@@ -14,15 +14,6 @@ provider "nsxt" {
   allow_unverified_ssl = var.allow_unverified_ssl
 }
 
-# Data source for the enforcement point
-data "nsxt_policy_site" "default" {
-  display_name = "default"
-}
-
-data "nsxt_policy_enforcement_point" "default" {
-  display_name = "default"
-}
-
 # Create security groups for services
 module "security_groups" {
   source = "./modules/security-groups"
