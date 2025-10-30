@@ -164,27 +164,26 @@ class NSXTClient:
         """Create an Antrea-type group with Pod membership criteria"""
         url = f"{self.base_url}/infra/domains/default/groups/{group_id}"
         
-        # Build membership criteria
-        expressions = [
-            {
-                "resource_type": "Condition",
-                "member_type": "Namespace",
-                "key": "Name",
-                "operator": "EQUALS",
-                "value": namespace,
-            }
-        ]
+        # Build membership criteria - use ConjunctionOperator to combine conditions
+        expressions = []
         
-        # Add Pod tag conditions
+        # Add namespace condition
+        expressions.append({
+            "resource_type": "Condition",
+            "member_type": "Namespace",
+            "key": "Name",
+            "operator": "EQUALS",
+            "value": namespace,
+        })
+        
+        # Add Pod tag conditions - use pipe-separated format for scope|tag
         for tag_spec in tags:
             expressions.append({
                 "resource_type": "Condition",
                 "member_type": "Pod",
                 "key": "Tag",
                 "operator": "EQUALS",
-                "scope_operator": "EQUALS",
-                "scope": tag_spec["scope"],
-                "value": tag_spec["tag"],
+                "value": f"{tag_spec['scope']}|{tag_spec['tag']}",
             })
         
         payload = {
