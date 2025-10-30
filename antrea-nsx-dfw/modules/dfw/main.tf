@@ -62,24 +62,21 @@ resource "nsxt_policy_group" "store_service" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "service-name"
-      value       = "store"
+      tag         = "store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -94,24 +91,21 @@ resource "nsxt_policy_group" "cart_service" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "service-name"
-      value       = "cart"
+      tag         = "cart"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -126,24 +120,21 @@ resource "nsxt_policy_group" "order_service" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "service-name"
-      value       = "order"
+      tag         = "order"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -158,24 +149,21 @@ resource "nsxt_policy_group" "users_service" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "service-name"
-      value       = "users"
+      tag         = "users"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -190,24 +178,21 @@ resource "nsxt_policy_group" "database_service" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "service-name"
-      value       = "database"
+      tag         = "database"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
     condition {
       member_type = "Namespace"
@@ -222,17 +207,15 @@ resource "nsxt_policy_group" "music_store_app" {
   criteria {
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "app-name"
-      value       = "music-store"
+      tag         = "music-store"
     }
     condition {
       member_type = "Pod"
-      key         = "Tag"
       operator    = "EQUALS"
       scope       = "env"
-      value       = "prod"
+      tag         = "prod"
     }
   }
 }
