@@ -45,17 +45,15 @@ def main(csv_path: str, out_dir: str):
             continue
         header = row[0]
         if header == 'SecurityPolicyDto':
-            i += 1
-            # headers line
+            # Move past the header line only
             i += 1
             while i < len(rows) and rows[i] and rows[i][0] != 'RuleDto' and rows[i][0] != 'SecurityPolicyContainerClusterDto':
                 policies.append(rows[i])
                 i += 1
         elif header == 'RuleDto':
+            # Move past the header line only
             i += 1
-            # headers line
-            i += 1
-            while i < len(rows) and rows[i] and rows[i][0] != 'SecurityPolicyContainerClusterDto':
+            while i < len(rows) and rows[i] and rows[i][0] != 'SecurityPolicyContainerClusterDto' and rows[i][0] != 'SecurityPolicyDto':
                 rules.append(rows[i])
                 i += 1
         else:
@@ -97,7 +95,7 @@ def main(csv_path: str, out_dir: str):
         dst_groups = parse_list_field(r[8])
         service_entries = r[10]
         direction = r[16] or 'IN_OUT'
-        display_name = r[38] if len(r) > 38 and r[38] else f"rule_{rule_id_num}"
+        display_name = r[35] if len(r) > 35 and r[35] else f"rule_{rule_id_num}"
 
         if parent_path != '/infra/domains/default/security-policies/prod':
             continue
@@ -119,7 +117,7 @@ def main(csv_path: str, out_dir: str):
             f'resource "nsxt_policy_security_rule" "{rule_name}" {{',
             '  policy_path   = nsxt_policy_security_policy.prod.path',
             f'  display_name  = "{display_name}"',
-            f'  action        = "{action.capitalize()}"',
+            f'  action        = "{action.upper()}"',
             f'  direction     = "{direction}"',
         ]
         if src_groups:
