@@ -106,7 +106,7 @@ resource "nsxt_policy_group" "music_store_frontend" {
   display_name = "Music-store-frontend"
   description  = "Music store frontend service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -139,7 +139,7 @@ resource "nsxt_policy_group" "store_service" {
   display_name = "store-service"
   description  = "Music store main service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -172,7 +172,7 @@ resource "nsxt_policy_group" "cart_service" {
   display_name = "cart-service"
   description  = "Shopping cart service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -205,7 +205,7 @@ resource "nsxt_policy_group" "order_service" {
   display_name = "order-service"
   description  = "Order processing service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -238,7 +238,7 @@ resource "nsxt_policy_group" "users_service" {
   display_name = "users-service"
   description  = "User management service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -271,7 +271,7 @@ resource "nsxt_policy_group" "database_service" {
   display_name = "database-service"
   description  = "PostgreSQL database service"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
@@ -304,7 +304,7 @@ resource "nsxt_policy_group" "music_store_all" {
   display_name = "music-store-all"
   description  = "All music store services"
   domain       = "default"
-  type         = "Antrea"
+  group_type   = "ANTREA"
 
   criteria {
     condition {
