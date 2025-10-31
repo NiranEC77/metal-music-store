@@ -462,7 +462,7 @@ resource "nsxt_policy_security_policy_rule" "store_to_users" {
   description        = "Allow store service to access users service"
   policy_path        = nsxt_policy_security_policy.music_store_prod.path
   sequence_number    = 31249
-  action             = "ALLOW"
+  action             = "DROP"
   direction          = "IN"
   ip_version         = "IPV4_IPV6"
   logged             = false
