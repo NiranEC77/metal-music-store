@@ -110,6 +110,12 @@ resource "nsxt_policy_group" "music_store_frontend" {
 
   criteria {
     condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -142,6 +148,12 @@ resource "nsxt_policy_group" "store_service" {
   group_type   = "ANTREA"
 
   criteria {
+    condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
     condition {
       member_type = "Pod"
       key         = "Tag"
@@ -176,6 +188,12 @@ resource "nsxt_policy_group" "cart_service" {
 
   criteria {
     condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -208,6 +226,12 @@ resource "nsxt_policy_group" "order_service" {
   group_type   = "ANTREA"
 
   criteria {
+    condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
     condition {
       member_type = "Pod"
       key         = "Tag"
@@ -242,6 +266,12 @@ resource "nsxt_policy_group" "users_service" {
 
   criteria {
     condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -275,6 +305,12 @@ resource "nsxt_policy_group" "database_service" {
 
   criteria {
     condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
+    condition {
       member_type = "Pod"
       key         = "Tag"
       operator    = "EQUALS"
@@ -307,6 +343,12 @@ resource "nsxt_policy_group" "music_store_all" {
   group_type   = "ANTREA"
 
   criteria {
+    condition {
+      member_type = "Namespace"
+      key         = "Name"
+      operator    = "EQUALS"
+      value       = "music-store"
+    }
     condition {
       member_type = "Pod"
       key         = "Tag"
