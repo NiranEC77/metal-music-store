@@ -75,7 +75,7 @@ metadata:
   name: music-store-1-service
   # Updated with proper port names for ArgoCD validation
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: music-store-1
   ports:
