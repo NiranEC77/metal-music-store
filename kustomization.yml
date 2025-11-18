@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - k8s-cart-deployment.yaml
   - k8s-database-deployment.yaml
-  - k8s-ingress.yaml
   - k8s-deployment.yaml
   - k8s-order-deployment.yaml
   - k8s-users-deployment.yaml
