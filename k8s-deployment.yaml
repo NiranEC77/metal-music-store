@@ -26,7 +26,7 @@ spec:
         service-name: store
         env: prod
       annotations:
-        kubernetes.io/change-cause: "Added cart dropdown notification, fixed cart clearing, updated success message"
+        kubernetes.io/change-cause: "Added 10-second timeout with center screen notification for cart and users service communication failures"
         date: "2024-01-$(date +%d)"
         timestamp: "$(date +%s)"
     spec:
@@ -39,7 +39,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: music-store-1
-        image: ghcr.io/niranec77/example-music-store-1-store:latest
+        image: ghcr.io/niranec77/example-music-store-1-store:1.0.51
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false

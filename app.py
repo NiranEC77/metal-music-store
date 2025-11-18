@@ -530,6 +530,66 @@ INDEX_HTML = '''
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        /* Timeout Notification */
+        .timeout-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(231, 76, 60, 0.4);
+            z-index: 2000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid rgba(255,255,255,0.2);
+            opacity: 0;
+        }
+
+        .timeout-notification.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .timeout-notification h3 {
+            color: white;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeout-notification p {
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+
+        .timeout-notification button {
+            background: white;
+            color: #e74c3c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .timeout-notification button:hover {
+            background: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -730,7 +790,14 @@ INDEX_HTML = '''
                     password: password
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok && response.status === 504) {
+                    return response.json().then(data => {
+                        throw new Error('TIMEOUT');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Store token in localStorage
@@ -740,6 +807,10 @@ INDEX_HTML = '''
                     // Close modal and redirect to admin page
                     closeLoginModal();
                     window.location.href = '/admin';
+                } else if (data.timeout) {
+                    showTimeoutNotification(data.service || 'users');
+                    errorDiv.textContent = 'Service timeout. Please try again.';
+                    errorDiv.style.display = 'block';
                 } else {
                     errorDiv.textContent = data.error || 'Login failed';
                     errorDiv.style.display = 'block';
@@ -747,8 +818,14 @@ INDEX_HTML = '''
             })
             .catch(error => {
                 console.error('Error:', error);
-                errorDiv.textContent = 'Login failed. Please try again.';
-                errorDiv.style.display = 'block';
+                if (error.message === 'TIMEOUT') {
+                    showTimeoutNotification('users');
+                    errorDiv.textContent = 'Service timeout. Please try again.';
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = 'Login failed. Please try again.';
+                    errorDiv.style.display = 'block';
+                }
             });
             
             return false;
@@ -767,21 +844,39 @@ INDEX_HTML = '''
             
             const formData = new FormData(form);
             
+            // Set timeout for the fetch request
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Request timeout')), 10000);
+            });
+            
             fetch('/add_to_cart', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok && response.status === 504) {
+                    return response.json().then(data => {
+                        throw new Error('TIMEOUT');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     showCartNotification(data.redirect_url);
+                } else if (data.timeout) {
+                    showTimeoutNotification(data.service || 'cart');
                 } else {
                     alert('Error adding to cart: ' + data.error);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error adding to cart');
+                if (error.message === 'TIMEOUT' || error.message === 'Request timeout') {
+                    showTimeoutNotification('cart');
+                } else {
+                    alert('Error adding to cart');
+                }
             });
             
             return false;
@@ -820,6 +915,42 @@ INDEX_HTML = '''
                     }
                 }, 300);
             }, 8000);
+        }
+
+        function showTimeoutNotification(service) {
+            // Remove existing timeout notification
+            const existing = document.querySelector('.timeout-notification');
+            if (existing) {
+                existing.remove();
+            }
+            
+            const serviceName = service === 'cart' ? 'Cart' : 'Users';
+            
+            // Create timeout notification
+            const notification = document.createElement('div');
+            notification.className = 'timeout-notification';
+            notification.innerHTML = `
+                <h3>⚠️ Service Timeout</h3>
+                <p>The ${serviceName} service did not respond within 10 seconds. The service may be unavailable or experiencing issues.</p>
+                <button onclick="this.parentElement.remove()">Close</button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto-hide after 15 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 15000);
         }
     </script>
 </body>
@@ -1382,8 +1513,8 @@ def add_to_cart():
             'session_id': session['cart_session_id']
         }
         
-        # Forward the request to cart service with album details
-        response = requests.post(f"{CART_SERVICE_URL}/add_to_cart", data=cart_data)
+        # Forward the request to cart service with album details (10 second timeout)
+        response = requests.post(f"{CART_SERVICE_URL}/add_to_cart", data=cart_data, timeout=10)
         
         if response.status_code == 200:
             # Parse JSON response
@@ -1402,8 +1533,10 @@ def add_to_cart():
                 return jsonify(result), 400
         else:
             return response.content, response.status_code
+    except requests.Timeout:
+        return jsonify({'error': 'Cart service timeout after 10 seconds', 'timeout': True, 'service': 'cart'}), 504
     except requests.RequestException as e:
-        return f"Error connecting to cart service: {str(e)}", 503
+        return jsonify({'error': f'Error connecting to cart service: {str(e)}', 'timeout': False, 'service': 'cart'}), 503
 
 @app.route('/cart')
 def view_cart():
@@ -1418,9 +1551,17 @@ def view_cart():
             session['cart_session_id'] = os.urandom(16).hex()
             session_id = session['cart_session_id']
         
-        # Pass session_id as query parameter
-        response = requests.get(f"{CART_SERVICE_URL}/?session_id={session_id}")
+        # Pass session_id as query parameter (10 second timeout)
+        response = requests.get(f"{CART_SERVICE_URL}/?session_id={session_id}", timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return render_template_string(INDEX_HTML.replace('</body>', '''
+        <div class="timeout-notification show">
+            <h3>⚠️ Service Timeout</h3>
+            <p>The cart service is not responding. Please try again later.</p>
+            <button onclick="this.parentElement.remove()">Close</button>
+        </div>
+        </body>')), 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
@@ -1435,9 +1576,11 @@ def checkout():
         if not session_id:
             return redirect(url_for('view_cart'))
         
-        # Pass session_id as query parameter
-        response = requests.get(f"{CART_SERVICE_URL}/checkout?session_id={session_id}")
+        # Pass session_id as query parameter (10 second timeout)
+        response = requests.get(f"{CART_SERVICE_URL}/checkout?session_id={session_id}", timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return f"Cart service timeout after 10 seconds", 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
@@ -1456,7 +1599,7 @@ def process_payment():
         form_data = request.form.copy()
         form_data['session_id'] = session_id
         
-        response = requests.post(f"{CART_SERVICE_URL}/process_payment", data=form_data, allow_redirects=False)
+        response = requests.post(f"{CART_SERVICE_URL}/process_payment", data=form_data, allow_redirects=False, timeout=10)
         
         # Handle redirects from cart service
         if response.status_code in [301, 302, 303, 307, 308]:
@@ -1488,8 +1631,10 @@ def remove_item():
             'item_id': request.form['item_id'],
             'session_id': session_id
         }
-        response = requests.post(f"{CART_SERVICE_URL}/remove_item", data=cart_data)
+        response = requests.post(f"{CART_SERVICE_URL}/remove_item", data=cart_data, timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return f"Cart service timeout after 10 seconds", 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
@@ -1510,8 +1655,10 @@ def update_quantity():
             'quantity': request.form['quantity'],
             'session_id': session_id
         }
-        response = requests.post(f"{CART_SERVICE_URL}/update_quantity", data=cart_data)
+        response = requests.post(f"{CART_SERVICE_URL}/update_quantity", data=cart_data, timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return f"Cart service timeout after 10 seconds", 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
@@ -1526,9 +1673,11 @@ def order_success():
         if not session_id:
             return redirect(url_for('index'))
         
-        # Pass session_id as query parameter
-        response = requests.get(f"{CART_SERVICE_URL}/order_success?session_id={session_id}")
+        # Pass session_id as query parameter (10 second timeout)
+        response = requests.get(f"{CART_SERVICE_URL}/order_success?session_id={session_id}", timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return f"Cart service timeout after 10 seconds", 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
@@ -1538,10 +1687,12 @@ def login():
     import requests
     
     try:
-        response = requests.post(f"{USERS_SERVICE_URL}/api/login", json=request.get_json())
+        response = requests.post(f"{USERS_SERVICE_URL}/api/login", json=request.get_json(), timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return jsonify({'error': 'Users service timeout after 10 seconds', 'timeout': True, 'service': 'users'}), 504
     except requests.RequestException as e:
-        return jsonify({'error': f'Users service unavailable: {str(e)}'}), 503
+        return jsonify({'error': f'Users service unavailable: {str(e)}', 'timeout': False, 'service': 'users'}), 503
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
@@ -1549,10 +1700,12 @@ def logout():
     import requests
     
     try:
-        response = requests.post(f"{USERS_SERVICE_URL}/api/logout", json=request.get_json())
+        response = requests.post(f"{USERS_SERVICE_URL}/api/logout", json=request.get_json(), timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return jsonify({'error': 'Users service timeout after 10 seconds', 'timeout': True, 'service': 'users'}), 504
     except requests.RequestException as e:
-        return jsonify({'error': f'Users service unavailable: {str(e)}'}), 503
+        return jsonify({'error': f'Users service unavailable: {str(e)}', 'timeout': False, 'service': 'users'}), 503
 
 @app.route('/api/verify', methods=['POST'])
 def verify_token():
@@ -1560,10 +1713,12 @@ def verify_token():
     import requests
     
     try:
-        response = requests.post(f"{USERS_SERVICE_URL}/api/verify", json=request.get_json())
+        response = requests.post(f"{USERS_SERVICE_URL}/api/verify", json=request.get_json(), timeout=10)
         return response.content, response.status_code
+    except requests.Timeout:
+        return jsonify({'error': 'Users service timeout after 10 seconds', 'timeout': True, 'service': 'users'}), 504
     except requests.RequestException as e:
-        return jsonify({'error': f'Users service unavailable: {str(e)}'}), 503
+        return jsonify({'error': f'Users service unavailable: {str(e)}', 'timeout': False, 'service': 'users'}), 503
 
 @app.route('/admin')
 def admin_panel():
