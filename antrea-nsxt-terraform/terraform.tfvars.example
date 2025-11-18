@@ -1,8 +1,0 @@
-# NSX-T Manager Configuration
-nsx_manager          = "nsx-manager.example.com"
-nsx_username         = "admin"
-nsx_password         = "CHANGE_ME"  # Store this in terraform.tfvars (gitignored)
-allow_unverified_ssl = true
-
-# Antrea Cluster Configuration
-cluster_control_plane_id = "a9f2d700-30a3-4e5d-9fd9-622d15219d6b-e2e-ns-6j7x6-e2e-niran-cls01-antrea"
