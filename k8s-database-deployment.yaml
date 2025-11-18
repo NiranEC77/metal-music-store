@@ -50,7 +50,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: postgres
-        image: ghcr.io/niranec77/metal-music-store-database:1.0.55latest
+        image: ghcr.io/niranec77/metal-music-store-database:1.0.55
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
