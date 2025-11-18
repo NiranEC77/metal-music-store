@@ -1561,7 +1561,7 @@ def view_cart():
             <p>The cart service is not responding. Please try again later.</p>
             <button onclick="this.parentElement.remove()">Close</button>
         </div>
-        </body>')), 504
+        </body>''')), 504
     except requests.RequestException as e:
         return f"Error connecting to cart service: {str(e)}", 503
 
