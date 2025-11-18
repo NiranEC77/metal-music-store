@@ -122,19 +122,19 @@ jobs:
       - name: Update Kubernetes deployment files
         run: |
           # Update the main k8s deployment for store service
-          sed -i "s|image: ghcr.io/niranec77/example-music-store-1:.*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-store:${{ env.VERSION }}|" k8s-deployment.yaml
+          sed -i "s|image: ghcr.io/.*/.*-store:[0-9.]*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-store:${{ env.VERSION }}|" k8s-deployment.yaml
           
           # Update cart service deployment
-          sed -i "s|image: ghcr.io/niranec77/.*-cart:.*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-cart:${{ env.VERSION }}|" k8s-cart-deployment.yaml
+          sed -i "s|image: ghcr.io/.*/.*-cart:[0-9.]*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-cart:${{ env.VERSION }}|" k8s-cart-deployment.yaml
           
           # Update order service deployment
-          sed -i "s|image: ghcr.io/niranec77/.*-order:.*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-order:${{ env.VERSION }}|" k8s-order-deployment.yaml
+          sed -i "s|image: ghcr.io/.*/.*-order:[0-9.]*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-order:${{ env.VERSION }}|" k8s-order-deployment.yaml
           
           # Update users service deployment
-          sed -i "s|image: ghcr.io/niranec77/.*-users:.*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-users:${{ env.VERSION }}|" k8s-users-deployment.yaml
+          sed -i "s|image: ghcr.io/.*/.*-users:[0-9.]*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-users:${{ env.VERSION }}|" k8s-users-deployment.yaml
           
           # Update database service deployment
-          sed -i "s|image: postgres:15-alpine|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-database:${{ env.VERSION }}|" k8s-database-deployment.yaml
+          sed -i "s|image: ghcr.io/.*/.*-database:[0-9.]*|image: ghcr.io/${{ env.OWNER_NAME }}/${{ env.REPO_NAME }}-database:${{ env.VERSION }}|" k8s-database-deployment.yaml || true
 
       - name: Commit and push changes
         run: |
