@@ -7,7 +7,7 @@ spec:
   gatewayClassName: istio
   listeners:
   - name: default
-    hostname: "*.apps.vcf.lab"
+    hostname: "*"
     port: 80
     protocol: HTTP
     allowedRoutes:
