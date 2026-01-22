@@ -74,6 +74,21 @@ services:
     volumes:
       - users-data:/app
 
+  traffic-generator:
+    build: ./traffic-generator
+    ports:
+      - "5004:5004"
+    environment:
+      - STORE_SERVICE_URL=http://store-service:5000
+      - CART_SERVICE_URL=http://cart-service:5002
+      - ORDER_SERVICE_URL=http://order-service:5001
+      - USERS_SERVICE_URL=http://users-service:5003
+    depends_on:
+      - store-service
+      - cart-service
+      - order-service
+      - users-service
+
 volumes:
   postgres_data:
   cart-data:

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traffic-generator-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: traffic-generator
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5004
+      targetPort: 5004
+      nodePort: 30008
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-generator
+  template:
+    metadata:
+      labels:
+        app: traffic-generator
+        app-name: music-store
+        service-name: traffic-generator
+        env: prod
+      annotations:
+        kubernetes.io/change-cause: "Initial deployment of traffic generator with Selenium automation"
+        date: "2024-01-$(date +%d)"
+        timestamp: "$(date +%s)"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: traffic-generator
+        image: ghcr.io/niranec77/metal-music-store-traffic-generator:1.0.0
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        ports:
+        - containerPort: 5004
+        env:
+        - name: STORE_SERVICE_URL
+          value: "http://music-store-1-service:5000"
+        - name: CART_SERVICE_URL
+          value: "http://cart-service:5002"
+        - name: ORDER_SERVICE_URL
+          value: "http://order-service:5001"
+        - name: USERS_SERVICE_URL
+          value: "http://users-service:5003"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"

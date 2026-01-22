@@ -44,6 +44,16 @@ The application is split into three independent microservices:
   - Data persistence
 - **Database**: PostgreSQL (`music_store`)
 
+### 5. **Traffic Generator** (Port 5004)
+- **Purpose**: Load testing and traffic simulation
+- **Features**:
+  - Browser automation with Selenium
+  - Simulates realistic user journeys
+  - Configurable concurrent users and traffic intensity
+  - Real-time statistics and monitoring
+  - Tests all microservices end-to-end
+- **Technology**: Python Flask + Selenium WebDriver
+
 ## 🚀 Quick Start
 
 ### Using Docker Compose (Recommended)
@@ -62,6 +72,7 @@ The application is split into three independent microservices:
    - **Store**: http://localhost:5000
    - **Cart**: http://localhost:5002
    - **Orders Dashboard**: http://localhost:5001
+   - **Traffic Generator**: http://localhost:5004
    - **Database**: localhost:5432 (PostgreSQL)
 
 ### Manual Setup

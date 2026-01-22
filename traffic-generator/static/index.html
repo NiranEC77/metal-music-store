@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Generator - Metal Music Store</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎸 Traffic Generator</h1>
+            <p class="subtitle">Simulate realistic user traffic across all microservices</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Configuration Panel -->
+            <div class="panel config-panel">
+                <h2>Configuration</h2>
+                
+                <div class="form-group">
+                    <label for="concurrent-users">
+                        Concurrent Users: <span id="users-value">10</span>
+                    </label>
+                    <input type="range" id="concurrent-users" min="1" max="50" value="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="intensity">Traffic Intensity</label>
+                    <select id="intensity">
+                        <option value="low">Low (10-20s between actions)</option>
+                        <option value="medium" selected>Medium (5-10s between actions)</option>
+                        <option value="high">High (2-5s between actions)</option>
+                        <option value="extreme">Extreme (0.5-2s between actions)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">
+                        Duration (minutes): <span id="duration-value">5</span>
+                    </label>
+                    <input type="range" id="duration" min="1" max="60" value="5">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="headless" checked>
+                        Headless Mode (recommended)
+                    </label>
+                </div>
+
+                <h3>Journey Mix</h3>
+                <div class="journey-mix">
+                    <div class="form-group">
+                        <label for="browse-weight">
+                            Browse: <span id="browse-value">30</span>%
+                        </label>
+                        <input type="range" id="browse-weight" min="0" max="100" value="30">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shopping-weight">
+                            Shopping: <span id="shopping-value">40</span>%
+                        </label>
+                        <input type="range" id="shopping-weight" min="0" max="100" value="40">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="order-weight">
+                            Orders: <span id="order-value">20</span>%
+                        </label>
+                        <input type="range" id="order-weight" min="0" max="100" value="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin-weight">
+                            Admin: <span id="admin-value">10</span>%
+                        </label>
+                        <input type="range" id="admin-weight" min="0" max="100" value="10">
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="start-btn" class="btn btn-primary">Start Traffic</button>
+                    <button id="stop-btn" class="btn btn-danger" disabled>Stop Traffic</button>
+                </div>
+            </div>
+
+            <!-- Statistics Panel -->
+            <div class="panel stats-panel">
+                <h2>Statistics</h2>
+                
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">Idle</span>
+                    <span class="runtime" id="runtime">0:00</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-sessions">0</div>
+                        <div class="stat-label">Active Sessions</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-journeys">0</div>
+                        <div class="stat-label">Journeys Completed</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="page-loads">0</div>
+                        <div class="stat-label">Page Loads</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="success-rate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <h3>Service Activity</h3>
+                <div class="service-stats">
+                    <div class="service-row">
+                        <span class="service-name">Store Service</span>
+                        <span class="service-calls" id="store-calls">0</span>
+                        <span class="service-errors" id="store-errors">0 errors</span>
+                    </div>
+                    <div class="service-row">
+                        <span class="service-name">Cart Service</span>
+                        <span class="service-calls" id="cart-calls">0</span>
+                        <span class="service-errors" id="cart-errors">0 errors</span>
+                    </div>
+                    <div class="service-row">
+                        <span class="service-name">Order Service</span>
+                        <span class="service-calls" id="order-calls">0</span>
+                        <span class="service-errors" id="order-errors">0 errors</span>
+                    </div>
+                    <div class="service-row">
+                        <span class="service-name">Users Service</span>
+                        <span class="service-calls" id="users-calls">0</span>
+                        <span class="service-errors" id="users-errors">0 errors</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="panel activity-panel">
+                <h2>Live Activity Feed</h2>
+                <div id="activity-feed" class="activity-feed">
+                    <div class="activity-item">
+                        <span class="activity-time">--:--:--</span>
+                        <span class="activity-text">Waiting to start...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
