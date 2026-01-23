@@ -43,7 +43,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: traffic-generator
-        image: ghcr.io/niranec77/metal-music-store-traffic-generator:1.0.61
+        image: ghcr.io/niranec77/metal-music-store-traffic-generator:1.0.62
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
