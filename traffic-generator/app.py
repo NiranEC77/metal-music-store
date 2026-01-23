@@ -147,9 +147,15 @@ def browse_journey(driver, user_id, base_url):
         return True
         
     except Exception as e:
-        traffic_state['failure_count'] += 1
-        traffic_state['service_stats']['store']['errors'] += 1
-        log_action(f'User {user_id}: Browse journey failed - {str(e)}', 'error')
+        error_msg = str(e).lower()
+        # Categorize errors - some are expected and recoverable
+        if any(x in error_msg for x in ['stale element', 'inspector error', 'element not found']):
+            # These are common, expected errors in web automation - don't count as failures
+            log_action(f'User {user_id}: Browse journey - minor issue (continuing)', 'warning')
+        else:
+            traffic_state['failure_count'] += 1
+            traffic_state['service_stats']['store']['errors'] += 1
+            log_action(f'User {user_id}: Browse journey failed - {str(e)}', 'error')
         return False
 
 def shopping_journey(driver, user_id, base_url):
@@ -239,8 +245,12 @@ def shopping_journey(driver, user_id, base_url):
         return True
         
     except Exception as e:
-        traffic_state['failure_count'] += 1
-        log_action(f'User {user_id}: Shopping journey failed - {str(e)}', 'error')
+        error_msg = str(e).lower()
+        if any(x in error_msg for x in ['stale element', 'inspector error', 'element not found']):
+            log_action(f'User {user_id}: Shopping journey - minor issue (continuing)', 'warning')
+        else:
+            traffic_state['failure_count'] += 1
+            log_action(f'User {user_id}: Shopping journey failed - {str(e)}', 'error')
         return False
 
 def order_journey(driver, user_id, base_url):
@@ -263,9 +273,13 @@ def order_journey(driver, user_id, base_url):
         return True
         
     except Exception as e:
-        traffic_state['failure_count'] += 1
-        traffic_state['service_stats']['order']['errors'] += 1
-        log_action(f'User {user_id}: Order journey failed - {str(e)}', 'error')
+        error_msg = str(e).lower()
+        if any(x in error_msg for x in ['stale element', 'inspector error', 'element not found']):
+            log_action(f'User {user_id}: Order journey - minor issue (continuing)', 'warning')
+        else:
+            traffic_state['failure_count'] += 1
+            traffic_state['service_stats']['order']['errors'] += 1
+            log_action(f'User {user_id}: Order journey failed - {str(e)}', 'error')
         return False
 
 def admin_journey(driver, user_id, base_url):
@@ -303,8 +317,12 @@ def admin_journey(driver, user_id, base_url):
         return True
         
     except Exception as e:
-        traffic_state['failure_count'] += 1
-        log_action(f'User {user_id}: Admin journey failed - {str(e)}', 'error')
+        error_msg = str(e).lower()
+        if any(x in error_msg for x in ['stale element', 'inspector error', 'element not found']):
+            log_action(f'User {user_id}: Admin journey - minor issue (continuing)', 'warning')
+        else:
+            traffic_state['failure_count'] += 1
+            log_action(f'User {user_id}: Admin journey failed - {str(e)}', 'error')
         return False
 
 def is_session_valid(driver):
