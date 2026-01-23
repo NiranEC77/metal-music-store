@@ -71,6 +71,10 @@ def create_driver(headless=True):
         chrome_options.add_argument('--ignore-certificate-errors')
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
         
+        # Critical fix for DevToolsActivePort error in containers
+        chrome_options.add_argument('--remote-debugging-port=9222')
+        chrome_options.add_argument('--single-process')  # Run in single process mode
+        
         # Memory and performance options
         chrome_options.add_argument('--disable-background-networking')
         chrome_options.add_argument('--disable-background-timer-throttling')

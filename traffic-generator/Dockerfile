@@ -38,8 +38,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY static/ ./static/
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+# Create non-root user and necessary directories
+RUN useradd -m -u 1000 appuser \
+    && mkdir -p /tmp/.X11-unix /tmp \
+    && chmod 1777 /tmp /tmp/.X11-unix \
+    && chown -R appuser:appuser /app
+
 USER appuser
 
 # Expose port
