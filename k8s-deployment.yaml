@@ -39,7 +39,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: music-store-1
-        image: ghcr.io/niranec77/metal-music-store-store:1.0.59
+        image: ghcr.io/niranec77/metal-music-store-store:1.0.60
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
