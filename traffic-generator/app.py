@@ -73,7 +73,6 @@ def create_driver(headless=True):
         
         # Critical fix for DevToolsActivePort error in containers
         chrome_options.add_argument('--remote-debugging-port=9222')
-        chrome_options.add_argument('--single-process')  # Run in single process mode
         
         # Memory and performance options
         chrome_options.add_argument('--disable-background-networking')
@@ -308,15 +307,23 @@ def admin_journey(driver, user_id, base_url):
         log_action(f'User {user_id}: Admin journey failed - {str(e)}', 'error')
         return False
 
+def is_session_valid(driver):
+    """Check if the WebDriver session is still valid"""
+    try:
+        # Try to get the current URL - if this fails, session is invalid
+        _ = driver.current_url
+        return True
+    except Exception:
+        return False
+
 def user_session(user_id, config):
     """Run a single user session"""
     driver = None
+    journey_count = 0
+    max_journeys_per_session = 10  # Recreate driver after this many journeys
+    
     try:
         traffic_state['active_sessions'] += 1
-        driver = create_driver(headless=config.get('headless', True))
-        
-        # Track this driver for cleanup
-        traffic_state['active_drivers'].append(driver)
         
         # Get base URL from config
         base_url = config.get('base_url', STORE_URL)
@@ -337,18 +344,51 @@ def user_session(user_id, config):
         end_time = time.time() + (config.get('duration', 5) * 60)
         
         while time.time() < end_time and traffic_state['running']:
+            # Create or recreate driver if needed
+            if driver is None or not is_session_valid(driver) or journey_count >= max_journeys_per_session:
+                # Clean up old driver if exists
+                if driver:
+                    try:
+                        driver.quit()
+                        if driver in traffic_state['active_drivers']:
+                            traffic_state['active_drivers'].remove(driver)
+                    except:
+                        pass
+                
+                # Create new driver
+                try:
+                    driver = create_driver(headless=config.get('headless', True))
+                    traffic_state['active_drivers'].append(driver)
+                    journey_count = 0
+                    log_action(f'User {user_id}: Created new browser session')
+                except Exception as e:
+                    log_action(f'User {user_id}: Failed to create driver - {str(e)}', 'error')
+                    time.sleep(5)  # Wait before retrying
+                    continue
+            
+            # Run a journey
             journey_type = random.choice(journeys)
             
-            if journey_type == 'browse':
-                browse_journey(driver, user_id, base_url)
-            elif journey_type == 'shopping':
-                shopping_journey(driver, user_id, base_url)
-            elif journey_type == 'order':
-                order_journey(driver, user_id, base_url)
-            elif journey_type == 'admin':
-                admin_journey(driver, user_id, base_url)
-            
-            traffic_state['total_journeys'] += 1
+            try:
+                if journey_type == 'browse':
+                    browse_journey(driver, user_id, base_url)
+                elif journey_type == 'shopping':
+                    shopping_journey(driver, user_id, base_url)
+                elif journey_type == 'order':
+                    order_journey(driver, user_id, base_url)
+                elif journey_type == 'admin':
+                    admin_journey(driver, user_id, base_url)
+                
+                traffic_state['total_journeys'] += 1
+                journey_count += 1
+                
+            except Exception as e:
+                # If journey fails, check if it's a session issue
+                if 'invalid session id' in str(e).lower() or 'session' in str(e).lower():
+                    log_action(f'User {user_id}: Session invalidated, will recreate', 'warning')
+                    driver = None  # Force recreation on next iteration
+                else:
+                    log_action(f'User {user_id}: Journey error - {str(e)}', 'error')
             
             # Check if we should stop
             if not traffic_state['running']:
