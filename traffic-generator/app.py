@@ -53,55 +53,63 @@ def log_action(action, status='success'):
 
 def create_driver(headless=True):
     """Create a Selenium WebDriver instance"""
-    chrome_options = Options()
-    if headless:
-        chrome_options.add_argument('--headless=new')  # Use new headless mode
-    
-    # Essential options for containerized environments
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-software-rasterizer')
-    chrome_options.add_argument('--disable-extensions')
-    chrome_options.add_argument('--disable-setuid-sandbox')
-    chrome_options.add_argument('--window-size=1920,1080')
-    chrome_options.add_argument('--no-first-run')
-    chrome_options.add_argument('--no-default-browser-check')
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-    
-    # Memory and performance options
-    chrome_options.add_argument('--disable-background-networking')
-    chrome_options.add_argument('--disable-background-timer-throttling')
-    chrome_options.add_argument('--disable-backgrounding-occluded-windows')
-    chrome_options.add_argument('--disable-breakpad')
-    chrome_options.add_argument('--disable-component-extensions-with-background-pages')
-    chrome_options.add_argument('--disable-features=TranslateUI,BlinkGenPropertyTrees')
-    chrome_options.add_argument('--disable-ipc-flooding-protection')
-    chrome_options.add_argument('--disable-renderer-backgrounding')
-    chrome_options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
-    chrome_options.add_argument('--force-color-profile=srgb')
-    chrome_options.add_argument('--hide-scrollbars')
-    chrome_options.add_argument('--metrics-recording-only')
-    chrome_options.add_argument('--mute-audio')
-    
-    # Additional stability options
-    chrome_options.add_experimental_option('excludeSwitches', ['enable-logging', 'enable-automation'])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
-    chrome_options.add_experimental_option('prefs', {
-        'profile.default_content_setting_values': {
-            'images': 2,  # Disable images to save memory
-            'plugins': 2,
-            'popups': 2,
-            'geolocation': 2,
-            'notifications': 2,
-            'media_stream': 2,
-        }
-    })
-    
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
-    return driver
+    try:
+        chrome_options = Options()
+        if headless:
+            chrome_options.add_argument('--headless=new')  # Use new headless mode
+        
+        # Essential options for containerized environments
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-software-rasterizer')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('--disable-setuid-sandbox')
+        chrome_options.add_argument('--window-size=1920,1080')
+        chrome_options.add_argument('--no-first-run')
+        chrome_options.add_argument('--no-default-browser-check')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        
+        # Memory and performance options
+        chrome_options.add_argument('--disable-background-networking')
+        chrome_options.add_argument('--disable-background-timer-throttling')
+        chrome_options.add_argument('--disable-backgrounding-occluded-windows')
+        chrome_options.add_argument('--disable-breakpad')
+        chrome_options.add_argument('--disable-component-extensions-with-background-pages')
+        chrome_options.add_argument('--disable-features=TranslateUI,BlinkGenPropertyTrees')
+        chrome_options.add_argument('--disable-ipc-flooding-protection')
+        chrome_options.add_argument('--disable-renderer-backgrounding')
+        chrome_options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
+        chrome_options.add_argument('--force-color-profile=srgb')
+        chrome_options.add_argument('--hide-scrollbars')
+        chrome_options.add_argument('--metrics-recording-only')
+        chrome_options.add_argument('--mute-audio')
+        
+        # Additional stability options
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging', 'enable-automation'])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        chrome_options.add_experimental_option('prefs', {
+            'profile.default_content_setting_values': {
+                'images': 2,  # Disable images to save memory
+                'plugins': 2,
+                'popups': 2,
+                'geolocation': 2,
+                'notifications': 2,
+                'media_stream': 2,
+            }
+        })
+        
+        print(f"[DEBUG] Creating Chrome driver with headless={headless}")
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.set_page_load_timeout(30)
+        print(f"[DEBUG] Chrome driver created successfully")
+        return driver
+    except Exception as e:
+        print(f"[ERROR] Failed to create Chrome driver: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 def browse_journey(driver, user_id, base_url):
     """Simulate a user browsing the store"""
