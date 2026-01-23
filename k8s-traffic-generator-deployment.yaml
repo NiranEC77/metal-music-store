@@ -68,11 +68,11 @@ spec:
           value: "http://users-service:5003"
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "1Gi"
+            cpu: "500m"
           limits:
-            memory: "2Gi"
-            cpu: "1000m"
+            memory: "3Gi"
+            cpu: "2000m"
         volumeMounts:
         - name: dshm
           mountPath: /dev/shm
@@ -80,4 +80,4 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-          sizeLimit: 1Gi
+          sizeLimit: 2Gi
