@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: users-service
-        image: ghcr.io/niranec77/metal-music-store-users:1.0.58
+        image: ghcr.io/niranec77/metal-music-store-users:1.0.59
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
