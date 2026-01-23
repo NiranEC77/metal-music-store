@@ -51,7 +51,10 @@ adminSlider.addEventListener('input', (e) => {
 
 // Start traffic
 startBtn.addEventListener('click', async () => {
+    const baseUrl = document.getElementById('base-url').value.trim();
+
     const config = {
+        base_url: baseUrl || null,  // Use null if empty to fallback to default
         concurrent_users: parseInt(concurrentUsersSlider.value),
         intensity: document.getElementById('intensity').value,
         duration: parseInt(durationSlider.value),

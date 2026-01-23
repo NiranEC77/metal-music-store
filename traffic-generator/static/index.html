@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Traffic Generator - Metal Music Store</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -17,7 +19,13 @@
             <!-- Configuration Panel -->
             <div class="panel config-panel">
                 <h2>Configuration</h2>
-                
+
+                <div class="form-group">
+                    <label for="base-url">Base URL (Ingress)</label>
+                    <input type="text" id="base-url" placeholder="http://your-ingress-url.com" value="">
+                    <small>Leave empty to use default service URLs</small>
+                </div>
+
                 <div class="form-group">
                     <label for="concurrent-users">
                         Concurrent Users: <span id="users-value">10</span>
@@ -89,7 +97,7 @@
             <!-- Statistics Panel -->
             <div class="panel stats-panel">
                 <h2>Statistics</h2>
-                
+
                 <div class="status-indicator">
                     <span class="status-dot" id="status-dot"></span>
                     <span id="status-text">Idle</span>
@@ -158,4 +166,5 @@
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>

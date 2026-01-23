@@ -37,7 +37,8 @@ traffic_state = {
     },
     'recent_actions': [],
     'start_time': None,
-    'config': {}
+    'config': {},
+    'active_drivers': []  # Track active browser sessions for cleanup
 }
 
 def log_action(action, status='success'):
@@ -64,13 +65,13 @@ def create_driver(headless=True):
     driver.set_page_load_timeout(30)
     return driver
 
-def browse_journey(driver, user_id):
+def browse_journey(driver, user_id, base_url):
     """Simulate a user browsing the store"""
     try:
         log_action(f'User {user_id}: Starting browse journey')
         
         # Visit store homepage
-        driver.get(STORE_URL)
+        driver.get(base_url)
         traffic_state['total_page_loads'] += 1
         traffic_state['service_stats']['store']['calls'] += 1
         time.sleep(random.uniform(1, 3))
@@ -102,13 +103,13 @@ def browse_journey(driver, user_id):
         log_action(f'User {user_id}: Browse journey failed - {str(e)}', 'error')
         return False
 
-def shopping_journey(driver, user_id):
+def shopping_journey(driver, user_id, base_url):
     """Simulate a complete shopping journey"""
     try:
         log_action(f'User {user_id}: Starting shopping journey')
         
         # Visit store
-        driver.get(STORE_URL)
+        driver.get(base_url)
         traffic_state['total_page_loads'] += 1
         traffic_state['service_stats']['store']['calls'] += 1
         time.sleep(random.uniform(1, 2))
@@ -193,12 +194,13 @@ def shopping_journey(driver, user_id):
         log_action(f'User {user_id}: Shopping journey failed - {str(e)}', 'error')
         return False
 
-def order_journey(driver, user_id):
+def order_journey(driver, user_id, base_url):
     """View order dashboard"""
     try:
         log_action(f'User {user_id}: Checking orders')
         
-        driver.get(ORDER_URL)
+        # Try to navigate to orders from the base URL
+        driver.get(base_url)
         traffic_state['total_page_loads'] += 1
         traffic_state['service_stats']['order']['calls'] += 1
         time.sleep(random.uniform(2, 3))
@@ -217,12 +219,12 @@ def order_journey(driver, user_id):
         log_action(f'User {user_id}: Order journey failed - {str(e)}', 'error')
         return False
 
-def admin_journey(driver, user_id):
+def admin_journey(driver, user_id, base_url):
     """Simulate admin actions"""
     try:
         log_action(f'User {user_id}: Admin actions')
         
-        driver.get(STORE_URL)
+        driver.get(base_url)
         traffic_state['total_page_loads'] += 1
         traffic_state['service_stats']['store']['calls'] += 1
         time.sleep(random.uniform(1, 2))
@@ -263,6 +265,12 @@ def user_session(user_id, config):
         traffic_state['active_sessions'] += 1
         driver = create_driver(headless=config.get('headless', True))
         
+        # Track this driver for cleanup
+        traffic_state['active_drivers'].append(driver)
+        
+        # Get base URL from config
+        base_url = config.get('base_url', STORE_URL)
+        
         # Determine journey mix
         journey_weights = config.get('journey_mix', {
             'browse': 30,
@@ -282,15 +290,20 @@ def user_session(user_id, config):
             journey_type = random.choice(journeys)
             
             if journey_type == 'browse':
-                browse_journey(driver, user_id)
+                browse_journey(driver, user_id, base_url)
             elif journey_type == 'shopping':
-                shopping_journey(driver, user_id)
+                shopping_journey(driver, user_id, base_url)
             elif journey_type == 'order':
-                order_journey(driver, user_id)
+                order_journey(driver, user_id, base_url)
             elif journey_type == 'admin':
-                admin_journey(driver, user_id)
+                admin_journey(driver, user_id, base_url)
             
             traffic_state['total_journeys'] += 1
+            
+            # Check if we should stop
+            if not traffic_state['running']:
+                log_action(f'User {user_id}: Stopping due to stop signal')
+                break
             
             # Wait between journeys based on intensity
             intensity = config.get('intensity', 'medium')
@@ -303,11 +316,18 @@ def user_session(user_id, config):
             wait_range = wait_times.get(intensity, (5, 10))
             time.sleep(random.uniform(*wait_range))
         
+        log_action(f'User {user_id}: Session completed')
+        
     except Exception as e:
         log_action(f'User {user_id}: Session error - {str(e)}', 'error')
     finally:
         if driver:
-            driver.quit()
+            try:
+                driver.quit()
+                if driver in traffic_state['active_drivers']:
+                    traffic_state['active_drivers'].remove(driver)
+            except:
+                pass
         traffic_state['active_sessions'] -= 1
 
 def run_traffic(config):
@@ -366,6 +386,19 @@ def start_traffic():
 def stop_traffic():
     """Stop traffic generation"""
     traffic_state['running'] = False
+    log_action('Stop signal sent to all sessions')
+    
+    # Force quit all active drivers
+    drivers_to_quit = list(traffic_state['active_drivers'])
+    for driver in drivers_to_quit:
+        try:
+            driver.quit()
+        except:
+            pass
+    
+    traffic_state['active_drivers'] = []
+    log_action(f'Stopped {len(drivers_to_quit)} browser sessions')
+    
     return jsonify({'status': 'stopped'})
 
 @app.route('/api/stats', methods=['GET'])
